@@ -463,23 +463,47 @@
 
         const metersData = [
             { name: '1/2" (15mm) Class B/C', D: 0.015, nomQ: 1.5, maxQ: 3.0 },
+            { name: '1/2" (15mm) Turbine ISO R100/160', D: 0.015, nomQ: 2.5, maxQ: 3.125 },
             { name: '3/4" (20mm) Class B/C', D: 0.020, nomQ: 2.5, maxQ: 5.0 },
+            { name: '3/4" (20mm) Turbine ISO R100/160', D: 0.020, nomQ: 4.0, maxQ: 5.0 },
             { name: '1" (25mm) Class B/C', D: 0.025, nomQ: 3.5, maxQ: 7.0 },
+            { name: '1" (25mm) Turbine ISO R100/160', D: 0.025, nomQ: 6.3, maxQ: 7.875 },
             { name: '1.5" (40mm) Class B', D: 0.040, nomQ: 10.0, maxQ: 20.0 },
-            { name: '2" (50mm) Woltmann', D: 0.050, nomQ: 15.0, maxQ: 30.0 },
-            { name: '3" (80mm) Woltmann', D: 0.080, nomQ: 40.0, maxQ: 80.0 },
-            { name: '4" (100mm) Woltmann', D: 0.100, nomQ: 60.0, maxQ: 120.0 }
+            { name: '1.5" (40mm) Turbine ISO R100/160', D: 0.040, nomQ: 16.0, maxQ: 20.0 },
+            { name: '2" (50mm) Woltmann Class B/C', D: 0.050, nomQ: 15.0, maxQ: 30.0 },
+            { name: '2" (50mm) Electro/Ultra ISO R400/500', D: 0.050, nomQ: 40.0, maxQ: 50.0 },
+            { name: '3" (80mm) Woltmann Class B/C', D: 0.080, nomQ: 40.0, maxQ: 80.0 },
+            { name: '3" (80mm) Ultrasonic ISO R500', D: 0.080, nomQ: 63.0, maxQ: 78.75 },
+            { name: '3" (80mm) Electromagnetic ISO R400', D: 0.080, nomQ: 100.0, maxQ: 125.0 },
+            { name: '4" (100mm) Woltmann Class B/C', D: 0.100, nomQ: 60.0, maxQ: 120.0 },
+            { name: '4" (100mm) Ultrasonic ISO R500', D: 0.100, nomQ: 100.0, maxQ: 125.0 },
+            { name: '4" (100mm) Electromagnetic ISO R400', D: 0.100, nomQ: 160.0, maxQ: 200.0 },
+            { name: '6" (150mm) Woltmann Class B/C', D: 0.150, nomQ: 150.0, maxQ: 300.0 },
+            { name: '6" (150mm) Ultrasonic ISO R500', D: 0.150, nomQ: 250.0, maxQ: 312.5 },
+            { name: '6" (150mm) Electromagnetic ISO R400', D: 0.150, nomQ: 400.0, maxQ: 500.0 },
+            { name: '8" (200mm) Woltmann Class B', D: 0.200, nomQ: 250.0, maxQ: 500.0 },
+            { name: '8" (200mm) Ultrasonic ISO R500', D: 0.200, nomQ: 400.0, maxQ: 500.0 },
+            { name: '8" (200mm) Electromagnetic ISO R400', D: 0.200, nomQ: 630.0, maxQ: 787.5 },
+            { name: '12" (300mm) Woltmann Class B', D: 0.300, nomQ: 600.0, maxQ: 1200.0 },
+            { name: '12" (300mm) Electro/Ultra ISO R400/500', D: 0.300, nomQ: 1000.0, maxQ: 1250.0 },
+            { name: '16" (400mm) Woltmann Class B', D: 0.400, nomQ: 1000.0, maxQ: 2000.0 }
         ];
 
         const pipesData = [
             { name: '1/2" (15mm)', D: 0.015 },
             { name: '3/4" (20mm)', D: 0.020 },
             { name: '1" (25mm)', D: 0.025 },
+            { name: '1.25" (32mm)', D: 0.032 },
             { name: '1.5" (40mm)', D: 0.040 },
             { name: '2" (50mm)', D: 0.050 },
             { name: '2.5" (65mm)', D: 0.065 },
             { name: '3" (80mm)', D: 0.080 },
-            { name: '4" (100mm)', D: 0.100 }
+            { name: '4" (100mm)', D: 0.100 },
+            { name: '6" (150mm)', D: 0.150 },
+            { name: '8" (200mm)', D: 0.200 },
+            { name: '10" (250mm)', D: 0.250 },
+            { name: '12" (300mm)', D: 0.300 },
+            { name: '16" (400mm)', D: 0.400 }
         ];
 
         let currentMode = 'mode1';
