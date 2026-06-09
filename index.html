@@ -34,7 +34,6 @@
             .lg\:col-span-7 { grid-column: span 12 / span 12 !important; }
             .glass-panel { box-shadow: none; border: none; padding: 0 !important; border-top: none !important; }
             
-            /* กำหนดหน้า A4 */
             @page { size: A4 portrait; margin: 1.5cm; }
             
             #printable-report { width: 100%; display: block; }
@@ -42,11 +41,9 @@
             .print-header h1 { font-size: 18pt; color: #000; margin: 0; }
             .print-header p { font-size: 10pt; color: #555; margin: 5px 0 0 0; }
             
-            /* เลี่ยงการตัดหน้าตรงกลางข้อมูล */
             .avoid-break { page-break-inside: avoid; }
             canvas { max-width: 100% !important; height: auto !important; }
             
-            /* จัดการสีพื้นหลังตอนปริ้น */
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .bg-slate-50 { background-color: #f8fafc !important; }
             .border { border: 1px solid #e2e8f0 !important; }
@@ -94,19 +91,43 @@
                 <!-- 🔴 โหมด 1: หาขนาดท่อ & จำลองลูกลอย -->
                 <div id="input-mode1" class="space-y-4">
                     <div class="grid grid-cols-2 gap-3">
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ความต้องการน้ำ (L/day)</label><input type="number" id="m1_dailyDemand" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="2000"></div>
+                        <div class="col-span-2 md:col-span-1"><label class="block text-xs font-semibold mb-1 text-slate-600">ความต้องการน้ำ (L/day)</label><input type="number" id="m1_dailyDemand" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="2000"></div>
                         <div><label class="block text-xs font-semibold mb-1 text-slate-600">ชั่วโมงเติมน้ำ (hr)</label><input type="number" id="m1_peakHours" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="4"></div>
                         <div><label class="block text-xs font-semibold mb-1 text-slate-600">ระยะทางท่อรวม (m)</label><input type="number" id="m1_pipeLength" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="20"></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ความสูง Δz (m)</label><input type="number" id="m1_elevation" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="5"></div>
+                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ความสูงปลายท่อ Δz (m)</label><input type="number" id="m1_elevation" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="5"></div>
                         <div><label class="block text-xs font-semibold mb-1 text-slate-600">แรงดันประปา P₁ (Bar)</label><input type="number" id="m1_pressure" step="0.1" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="1.5"></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ΣK ข้อต่อ/วาล์ว</label><input type="number" id="m1_minorK" step="0.5" class="w-full px-3 py-2 rounded border border-slate-300 outline-none" value="5.0"></div>
                     </div>
+                    
+                    <!-- ส่วนคำนวณ K รวมอัตโนมัติ -->
+                    <div class="mt-3 bg-white border border-slate-200 shadow-sm rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2 border-b border-slate-100 pb-1">
+                            <span class="text-[11px] font-bold text-slate-700"><i class="fa-solid fa-plug mr-1 text-slate-500"></i> ข้อต่อ/วาล์วในเส้นท่อหลัก (ระบุจำนวน)</span>
+                            <span class="text-[11px] font-black text-blue-700 bg-blue-50 px-2 py-0.5 rounded">ΣK = <span id="m1_sumK_display">5.00</span></span>
+                            <input type="hidden" id="m1_minorK" value="5.0">
+                        </div>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-2 text-[10px] text-center">
+                            <div><label class="block text-slate-500 mb-1">งอ90°<br>(1.0)</label><input type="number" id="m1_k_el90" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m1')"></div>
+                            <div><label class="block text-slate-500 mb-1">งอ45°<br>(0.4)</label><input type="number" id="m1_k_el45" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m1')"></div>
+                            <div><label class="block text-slate-500 mb-1">สามทาง<br>(1.8)</label><input type="number" id="m1_k_tee" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m1')"></div>
+                            <div><label class="block text-slate-500 mb-1">เกทวาล์ว<br>(0.2)</label><input type="number" id="m1_k_gate" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m1')"></div>
+                            <div><label class="block text-slate-500 mb-1">เช็ควาล์ว<br>(2.5)</label><input type="number" id="m1_k_check" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m1')"></div>
+                            <div><label class="block text-slate-500 mb-1">อื่นๆ<br>(ระบุ K)</label><input type="number" id="m1_k_other" class="w-full border rounded px-1 py-1 text-center bg-slate-50" value="5.0" step="0.5" min="0" oninput="calcK('m1')"></div>
+                        </div>
+                    </div>
+
                     <div class="p-3 border border-slate-200 bg-slate-50 rounded-lg space-y-3">
-                        <label class="block text-xs font-semibold mb-1 text-slate-700 border-b pb-1">การติดตั้งปลายท่อ (สำหรับคำนวณไหลจริง)</label>
+                        <label class="block text-xs font-semibold mb-1 text-slate-700 border-b pb-1"><i class="fa-solid fa-faucet-drip mr-1 text-slate-500"></i> การติดตั้งปลายท่อ</label>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-[11px] font-semibold mb-1 text-slate-600">บังคับท่อเมน</label><select id="m1_manualPipeSize" class="w-full px-2 py-1 rounded border outline-none text-xs"><option value="auto">คำนวณอัตโนมัติ</option></select></div>
-                            <div><label class="block text-[11px] font-semibold mb-1 text-slate-600">วาล์วปลายทาง</label><select id="m1_hasFloat" class="w-full px-2 py-1 rounded border outline-none text-xs"><option value="1">ใส่ลูกลอย (K=10)</option><option value="0">ปล่อยอิสระ</option></select></div>
-                            <div class="col-span-2"><label class="block text-[11px] font-semibold mb-1 text-slate-600">ขนาดลูกลอย / เกลียวปลายท่อ</label><select id="m1_floatSize" class="w-full px-2 py-1 rounded border outline-none text-xs"></select></div>
+                            <div>
+                                <label class="block text-[11px] font-semibold mb-1 text-slate-600">ชนิดวาล์วปลายทาง</label>
+                                <select id="m1_endValveK" class="w-full px-2 py-1 rounded border outline-none text-xs">
+                                    <option value="10">ลูกลอยมาตรฐาน (K=10)</option>
+                                    <option value="5">โฟลทวาล์วควบคุมไหล (K=5)</option>
+                                    <option value="0">ปล่อยอิสระ (K=0)</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2"><label class="block text-[11px] font-semibold mb-1 text-slate-600">ขนาดวาล์วปลายทาง / ขนาดเกลียวออก</label><select id="m1_endValveSize" class="w-full px-2 py-1 rounded border outline-none text-xs"></select></div>
                         </div>
                     </div>
                     <button onclick="calculateMode1()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow transition-colors"><i class="fa-solid fa-calculator mr-2"></i>วิเคราะห์ Mode 1</button>
@@ -116,14 +137,43 @@
                 <div id="input-mode2" class="space-y-4 hidden">
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="block text-xs font-semibold mb-1 text-slate-600">แรงดันประปา P₁ (Bar)</label><input type="number" id="m2_pressure" step="0.1" class="w-full px-3 py-2 rounded border outline-none" value="1.5"></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ความสูง Δz (m)</label><input type="number" id="m2_elevation" class="w-full px-3 py-2 rounded border outline-none" value="5"></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">มาตรวัดน้ำ</label><select id="m2_meterSize" class="w-full px-3 py-2 rounded border outline-none text-sm"></select></div>
+                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ความสูงปลายท่อ Δz (m)</label><input type="number" id="m2_elevation" class="w-full px-3 py-2 rounded border outline-none" value="5"></div>
+                        <div class="col-span-2 md:col-span-1"><label class="block text-xs font-semibold mb-1 text-slate-600">มาตรวัดน้ำต้นทาง</label><select id="m2_meterSize" class="w-full px-3 py-2 rounded border outline-none text-sm"></select></div>
                         <div><label class="block text-xs font-semibold mb-1 text-slate-600">ขนาดท่อเมนภายใน</label><select id="m2_pipeSize" class="w-full px-3 py-2 rounded border outline-none text-sm"></select></div>
                         <div><label class="block text-xs font-semibold mb-1 text-slate-600">ระยะทางท่อรวม L (m)</label><input type="number" id="m2_pipeLength" class="w-full px-3 py-2 rounded border outline-none" value="20"></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ΣK ข้อต่อท่อเมน</label><input type="number" id="m2_minorK" step="0.5" class="w-full px-3 py-2 rounded border outline-none" value="5.0"></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">วาล์วปลายทาง</label><select id="m2_hasFloat" class="w-full px-3 py-2 rounded border outline-none text-sm"><option value="1">มีลูกลอย (K=10)</option><option value="0">ปล่อยอิสระ</option></select></div>
-                        <div><label class="block text-xs font-semibold mb-1 text-slate-600">ขนาดลูกลอย</label><select id="m2_floatSize" class="w-full px-3 py-2 rounded border outline-none text-sm"></select></div>
                     </div>
+
+                    <div class="mt-3 bg-white border border-slate-200 shadow-sm rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2 border-b border-slate-100 pb-1">
+                            <span class="text-[11px] font-bold text-slate-700"><i class="fa-solid fa-plug mr-1 text-slate-500"></i> ข้อต่อ/วาล์วในเส้นท่อหลัก (ระบุจำนวน)</span>
+                            <span class="text-[11px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">ΣK = <span id="m2_sumK_display">5.00</span></span>
+                            <input type="hidden" id="m2_minorK" value="5.0">
+                        </div>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-2 text-[10px] text-center">
+                            <div><label class="block text-slate-500 mb-1">งอ90°<br>(1.0)</label><input type="number" id="m2_k_el90" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m2')"></div>
+                            <div><label class="block text-slate-500 mb-1">งอ45°<br>(0.4)</label><input type="number" id="m2_k_el45" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m2')"></div>
+                            <div><label class="block text-slate-500 mb-1">สามทาง<br>(1.8)</label><input type="number" id="m2_k_tee" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m2')"></div>
+                            <div><label class="block text-slate-500 mb-1">เกทวาล์ว<br>(0.2)</label><input type="number" id="m2_k_gate" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m2')"></div>
+                            <div><label class="block text-slate-500 mb-1">เช็ควาล์ว<br>(2.5)</label><input type="number" id="m2_k_check" class="w-full border rounded px-1 py-1 text-center" value="0" min="0" oninput="calcK('m2')"></div>
+                            <div><label class="block text-slate-500 mb-1">อื่นๆ<br>(ระบุ K)</label><input type="number" id="m2_k_other" class="w-full border rounded px-1 py-1 text-center bg-slate-50" value="5.0" step="0.5" min="0" oninput="calcK('m2')"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 border border-slate-200 bg-slate-50 rounded-lg">
+                        <label class="block text-xs font-semibold mb-2 text-slate-700 border-b pb-1"><i class="fa-solid fa-faucet-drip mr-1 text-slate-500"></i> ปลายท่อ</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold mb-1 text-slate-600">ชนิดวาล์วปลายทาง</label>
+                                <select id="m2_endValveK" class="w-full px-2 py-1 rounded border outline-none text-xs">
+                                    <option value="10">ลูกลอยมาตรฐาน (K=10)</option>
+                                    <option value="5">โฟลทวาล์วควบคุมไหล (K=5)</option>
+                                    <option value="0">ปล่อยอิสระ (K=0)</option>
+                                </select>
+                            </div>
+                            <div><label class="block text-[11px] font-semibold mb-1 text-slate-600">ขนาดวาล์วปลายทาง</label><select id="m2_endValveSize" class="w-full px-2 py-1 rounded border outline-none text-xs"></select></div>
+                        </div>
+                    </div>
+
                     <button onclick="calculateMode2()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow transition-colors"><i class="fa-solid fa-water mr-2"></i>วิเคราะห์ Mode 2</button>
                 </div>
 
@@ -137,14 +187,23 @@
                         </div>
                     </div>
 
+                    <div class="mb-2 border-b border-slate-200 pb-3 mt-2">
+                        <label class="block text-[12px] font-bold mb-2 text-slate-700">สถานะการเปิดวาล์วเข้าถัง (Valve Status)</label>
+                        <select id="m3_valveStatus" class="w-full px-2 py-1 rounded border outline-none text-xs bg-white text-indigo-700 font-medium shadow-sm">
+                            <option value="both">เปิดเติมน้ำ 2 ถังพร้อมกัน (Simultaneous)</option>
+                            <option value="tank1">เติมเฉพาะถังที่ 1 (ปิดถัง 2)</option>
+                            <option value="tank2">เติมเฉพาะถังที่ 2 (ปิดถัง 1)</option>
+                        </select>
+                    </div>
+
                     <div class="p-3 border border-slate-200 rounded-lg bg-slate-50">
                         <div class="grid grid-cols-3 gap-2">
                             <div id="m3_p1_single_container">
                                 <label class="block text-[10px] font-bold">P₁ ต้นทาง (Bar)</label>
-                                <input type="number" id="m3_pressure" step="0.1" class="w-full px-2 py-1 rounded border outline-none" value="1.5">
+                                <input type="number" id="m3_pressure" step="0.1" class="w-full px-2 py-1 rounded border outline-none text-xs" value="1.5">
                             </div>
-                            <div><label class="block text-[10px] font-bold">มาตรวัดน้ำ</label><select id="m3_meterSize" class="w-full px-2 py-1 rounded border outline-none text-xs"><option value="auto">อัตโนมัติ</option></select></div>
-                            <div><label class="block text-[10px] font-bold">ความยาวมาตร(m)</label><input type="number" id="m3_meterLength" step="0.01" class="w-full px-2 py-1 rounded border outline-none text-xs" value="0.165"></div>
+                            <div class="col-span-2 md:col-span-1"><label class="block text-[10px] font-bold">มาตรวัดน้ำ</label><select id="m3_meterSize" class="w-full px-2 py-1 rounded border outline-none text-xs"><option value="auto">อัตโนมัติ</option></select></div>
+                            <div class="col-span-3 md:col-span-1"><label class="block text-[10px] font-bold">ความยาวมาตร(m)</label><input type="number" id="m3_meterLength" step="0.01" class="w-full px-2 py-1 rounded border outline-none text-xs" value="0.165"></div>
                         </div>
                     </div>
                     
@@ -162,10 +221,33 @@
                             <div><label class="block text-[10px] font-bold">เป้าหมาย (m³/h)</label><input type="number" id="m3_q1" step="0.5" class="w-full px-2 py-1 rounded border outline-none text-xs" value="1.0"></div>
                             <div><label class="block text-[10px] font-bold">ระยะ L1 (m)</label><input type="number" id="m3_l1" class="w-full px-2 py-1 rounded border outline-none text-xs" value="40"></div>
                             <div><label class="block text-[10px] font-bold">สูง Z1 (m)</label><input type="number" id="m3_z1" class="w-full px-2 py-1 rounded border outline-none text-xs" value="5"></div>
-                            <div><label class="block text-[10px] font-bold">ΣK1</label><input type="number" id="m3_minorK1" step="0.5" class="w-full px-2 py-1 rounded border outline-none text-xs" value="2.0"></div>
-                            <div><label class="block text-[10px] font-bold">ขนาดท่อ</label><select id="m3_pipeSize1" class="w-full px-2 py-1 rounded border outline-none text-[10px]"><option value="auto">อัตโนมัติ</option></select></div>
-                            <div><label class="block text-[10px] font-bold">วาล์วลูกลอย 1</label><select id="m3_hasFloat1" class="w-full px-2 py-1 rounded border outline-none text-[10px]"><option value="1">ติดตั้ง</option><option value="0">ไม่มี</option></select></div>
-                            <div class="col-span-2"><label class="block text-[10px] font-bold">ขนาดลูกลอย 1 / ปลายท่อ</label><select id="m3_float1" class="w-full px-2 py-1 rounded border outline-none text-[10px]"></select></div>
+                            <div><label class="block text-[10px] font-bold">ขนาดท่อเมน 1</label><select id="m3_pipeSize1" class="w-full px-2 py-1 rounded border outline-none text-[10px]"><option value="auto">อัตโนมัติ</option></select></div>
+                            
+                            <div class="col-span-2 sm:col-span-4 bg-slate-50 rounded p-1 border border-slate-100 mt-1">
+                                <div class="flex justify-between items-center text-[9px] font-bold text-slate-600 mb-1 px-1">
+                                    <span>ระบุข้อต่อ/วาล์ว (ช่วงที่ 1)</span>
+                                    <span class="text-indigo-600">ΣK = <span id="m3_1_sumK_display">2.0</span></span>
+                                    <input type="hidden" id="m3_1_minorK" value="2.0">
+                                </div>
+                                <div class="grid grid-cols-6 gap-1 text-[8px] text-center">
+                                    <div>งอ90<input type="number" id="m3_1_k_el90" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_1')"></div>
+                                    <div>งอ45<input type="number" id="m3_1_k_el45" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_1')"></div>
+                                    <div>สามทาง<input type="number" id="m3_1_k_tee" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_1')"></div>
+                                    <div>เกท<input type="number" id="m3_1_k_gate" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_1')"></div>
+                                    <div>เช็ค<input type="number" id="m3_1_k_check" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_1')"></div>
+                                    <div>อื่นๆ<input type="number" id="m3_1_k_other" class="w-full border rounded text-center" value="2.0" step="0.5" min="0" oninput="calcK('m3_1')"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-2">
+                                <label class="block text-[10px] font-bold">ชนิดวาล์วถัง 1</label>
+                                <select id="m3_endValveK1" class="w-full px-2 py-1 rounded border outline-none text-[10px]">
+                                    <option value="10">ลูกลอยมาตรฐาน (K=10)</option>
+                                    <option value="5">โฟลทวาล์วควบคุมไหล (K=5)</option>
+                                    <option value="0">ปล่อยอิสระ (K=0)</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2 sm:col-span-2"><label class="block text-[10px] font-bold">ขนาดวาล์ว 1 / ปลายท่อ</label><select id="m3_endValveSize1" class="w-full px-2 py-1 rounded border outline-none text-[10px]"></select></div>
                         </div>
                     </div>
 
@@ -176,13 +258,36 @@
                             <div><label class="block text-[10px] font-bold">เป้าหมาย (m³/h)</label><input type="number" id="m3_q2" step="0.5" class="w-full px-2 py-1 rounded border outline-none text-xs" value="1.0"></div>
                             <div><label class="block text-[10px] font-bold">ระยะ L2 (m)</label><input type="number" id="m3_l2" class="w-full px-2 py-1 rounded border outline-none text-xs" value="30"></div>
                             <div><label class="block text-[10px] font-bold">สูง Z2 (m)</label><input type="number" id="m3_z2" class="w-full px-2 py-1 rounded border outline-none text-xs" value="6"></div>
-                            <div><label class="block text-[10px] font-bold">ΣK2</label><input type="number" id="m3_minorK2" step="0.5" class="w-full px-2 py-1 rounded border outline-none text-xs" value="2.0"></div>
-                            <div><label class="block text-[10px] font-bold">ขนาดท่อ</label><select id="m3_pipeSize2" class="w-full px-2 py-1 rounded border outline-none text-[10px]"><option value="auto">อัตโนมัติ</option></select></div>
-                            <div><label class="block text-[10px] font-bold">วาล์วลูกลอย 2</label><select id="m3_hasFloat2" class="w-full px-2 py-1 rounded border outline-none text-[10px]"><option value="1">ติดตั้ง</option><option value="0">ไม่มี</option></select></div>
-                            <div class="col-span-2"><label class="block text-[10px] font-bold">ขนาดลูกลอย 2 / ปลายท่อ</label><select id="m3_float2" class="w-full px-2 py-1 rounded border outline-none text-[10px]"></select></div>
+                            <div><label class="block text-[10px] font-bold">ขนาดท่อเมน 2</label><select id="m3_pipeSize2" class="w-full px-2 py-1 rounded border outline-none text-[10px]"><option value="auto">อัตโนมัติ</option></select></div>
+                            
+                            <div class="col-span-2 sm:col-span-4 bg-slate-50 rounded p-1 border border-slate-100 mt-1">
+                                <div class="flex justify-between items-center text-[9px] font-bold text-slate-600 mb-1 px-1">
+                                    <span>ระบุข้อต่อ/วาล์ว (ช่วงที่ 2)</span>
+                                    <span class="text-purple-600">ΣK = <span id="m3_2_sumK_display">2.0</span></span>
+                                    <input type="hidden" id="m3_2_minorK" value="2.0">
+                                </div>
+                                <div class="grid grid-cols-6 gap-1 text-[8px] text-center">
+                                    <div>งอ90<input type="number" id="m3_2_k_el90" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_2')"></div>
+                                    <div>งอ45<input type="number" id="m3_2_k_el45" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_2')"></div>
+                                    <div>สามทาง<input type="number" id="m3_2_k_tee" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_2')"></div>
+                                    <div>เกท<input type="number" id="m3_2_k_gate" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_2')"></div>
+                                    <div>เช็ค<input type="number" id="m3_2_k_check" class="w-full border rounded text-center" value="0" min="0" oninput="calcK('m3_2')"></div>
+                                    <div>อื่นๆ<input type="number" id="m3_2_k_other" class="w-full border rounded text-center" value="2.0" step="0.5" min="0" oninput="calcK('m3_2')"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-2 sm:col-span-2">
+                                <label class="block text-[10px] font-bold">ชนิดวาล์วถัง 2</label>
+                                <select id="m3_endValveK2" class="w-full px-2 py-1 rounded border outline-none text-[10px]">
+                                    <option value="10">ลูกลอยมาตรฐาน (K=10)</option>
+                                    <option value="5">โฟลทวาล์วควบคุมไหล (K=5)</option>
+                                    <option value="0">ปล่อยอิสระ (K=0)</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2 sm:col-span-2"><label class="block text-[10px] font-bold">ขนาดวาล์ว 2 / ปลายท่อ</label><select id="m3_endValveSize2" class="w-full px-2 py-1 rounded border outline-none text-[10px]"></select></div>
                         </div>
                     </div>
-                    <button onclick="calculateMode3()" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow transition-colors"><i class="fa-solid fa-code-branch mr-2"></i>วิเคราะห์ Mode 3</button>
+                    <button onclick="calculateMode3()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow transition-colors"><i class="fa-solid fa-code-branch mr-2"></i>วิเคราะห์ Mode 3</button>
                 </div>
             </div>
 
@@ -231,7 +336,7 @@
                         <div class="p-3 rounded-lg border bg-emerald-50 border-emerald-200 shadow-sm flex flex-col justify-center relative overflow-hidden">
                             <span class="text-[11px] font-bold text-emerald-900 block uppercase">ไหลจริงผ่านปลายท่อ (Actual Free Flow)</span>
                             <span id="m1_resActualFlow" class="text-3xl font-black text-emerald-700 mt-1">0.00 <span class="text-sm font-bold">m³/h</span></span>
-                            <div class="text-[10px] text-emerald-600 mt-2 border-t border-emerald-200 pt-1">ลูกลอยที่ระบุ: <b id="m1_resFloatName">-</b><br>มาตรวัดน้ำ: <span id="m1_resMeterSize" class="font-bold">-</span></div>
+                            <div class="text-[10px] text-emerald-600 mt-2 border-t border-emerald-200 pt-1">วาล์วปลายท่อ: <b id="m1_resFloatName">-</b><br>มาตรวัดน้ำ: <span id="m1_resMeterSize" class="font-bold">-</span></div>
                         </div>
                     </div>
 
@@ -270,7 +375,7 @@
                             <span id="m2_resFlowLPM" class="text-sm text-emerald-600 font-medium">0.0 L/min</span>
                         </div>
                         <div class="text-[10px] text-emerald-600 mt-2 border-t border-emerald-200 pt-1 flex flex-col sm:flex-row sm:gap-4">
-                            <span>ลูกลอย: <b id="m2_resFloatSize">-</b></span>
+                            <span>วาล์วปลายท่อ: <b id="m2_resFloatSize">-</b></span>
                             <span>ท่อเมน: <b id="m2_resPipeSize">-</b></span>
                             <span>มาตรวัดน้ำ: <span id="m2_resMeterSize" class="font-bold">-</span></span>
                         </div>
@@ -328,8 +433,8 @@
                                 <div><p class="text-[10px] text-emerald-700 font-bold">น้ำเข้าสุทธิ (Total Actual Flow)</p><p id="m3_resQtot" class="text-2xl font-black text-emerald-700">0.00 <span class="text-sm">m³/h</span></p></div>
                             </div>
                             <div class="grid grid-cols-2 gap-4 relative z-10">
-                                <div class="border-l-4 border-emerald-400 pl-3 bg-slate-50 py-2 rounded-r shadow-sm"><p class="text-[10px] text-slate-500 font-bold">ไหลลงถัง 1 (ผ่านลูกลอย)</p><p id="m3_resQ1" class="text-xl font-bold text-emerald-700">0.00 <span class="text-xs">m³/h</span></p></div>
-                                <div class="border-l-4 border-purple-400 pl-3 bg-slate-50 py-2 rounded-r shadow-sm"><p class="text-[10px] text-slate-500 font-bold">ไหลลงถัง 2 (ผ่านลูกลอย)</p><p id="m3_resQ2" class="text-xl font-bold text-purple-700">0.00 <span class="text-xs">m³/h</span></p></div>
+                                <div class="border-l-4 border-emerald-400 pl-3 bg-slate-50 py-2 rounded-r shadow-sm"><p class="text-[10px] text-slate-500 font-bold">ไหลลงถัง 1 (ผ่านวาล์ว)</p><p id="m3_resQ1" class="text-xl font-bold text-emerald-700">0.00 <span class="text-xs">m³/h</span></p></div>
+                                <div class="border-l-4 border-purple-400 pl-3 bg-slate-50 py-2 rounded-r shadow-sm"><p class="text-[10px] text-slate-500 font-bold">ไหลลงถัง 2 (ผ่านวาล์ว)</p><p id="m3_resQ2" class="text-xl font-bold text-purple-700">0.00 <span class="text-xs">m³/h</span></p></div>
                             </div>
                         </div>
 
@@ -380,7 +485,6 @@
                         <div class="bg-white border border-slate-200 shadow-sm rounded-lg p-4 avoid-break" style="page-break-after: auto;">
                             <h3 class="text-sm font-bold text-slate-800 mb-4"><i class="fa-solid fa-chart-line text-indigo-600 mr-1"></i> กราฟจำลองอัตราการไหลเทียบกับแรงดัน (24 ชั่วโมง)</h3>
                             <div class="w-full" style="position: relative; height:300px;">
-                                <!-- กำหนด height ชัดเจนช่วยให้ปริ้นต์ออกมากราฟไม่หด -->
                                 <canvas id="m3_chart"></canvas>
                             </div>
                         </div>
@@ -414,34 +518,35 @@
                     <h3>1. คู่มือการใช้งานเบื้องต้น</h3>
                     <p>ระบบ <b>Unified Flow Pro</b> ถูกออกแบบมาเพื่อช่วยวิศวกรและช่างประปาในการประเมินขนาดท่อและอัตราการไหลของน้ำประปาเข้าสู่บ้านเรือนหรืออาคาร โดยแบ่งเป็น 3 โหมดหลัก:</p>
                     <ul>
-                        <li><b>โหมด 1 (ออกแบบ & จำลองลูกลอย):</b> ใช้สำหรับหา <u>ขนาดท่อเมนที่เหมาะสม</u> จากความต้องการใช้น้ำต่อวัน พร้อมจำลองผลกระทบเมื่อติดตั้งวาล์วลูกลอยที่ปลายทาง</li>
-                        <li><b>โหมด 2 (ท่อเดี่ยว):</b> ใช้เมื่อทราบขนาดท่อและลูกลอยอยู่แล้ว และต้องการคำนวณหา <u>อัตราการไหลจริง (Actual Flow)</u> ที่ปลายท่อ</li>
-                        <li><b>โหมด 3 (โครงข่าย 2 ถัง):</b> สำหรับบ้านที่มีการเดินท่อแยกไปจ่ายน้ำลงถังเก็บน้ำ 2 ใบพร้อมกัน สามารถวิเคราะห์ได้ทั้งแบบจุดเวลาเดียว และแบบพล็อตกราฟ 24 ชั่วโมง</li>
+                        <li><b>โหมด 1 (ออกแบบ & จำลองลูกลอย):</b> ใช้สำหรับหา <u>ขนาดท่อเมนที่เหมาะสม</u> จากความต้องการใช้น้ำต่อวัน พร้อมจำลองผลกระทบเมื่อติดตั้งวาล์วควบคุมชนิดต่างๆ ที่ปลายทาง</li>
+                        <li><b>โหมด 2 (ท่อเดี่ยว):</b> ใช้เมื่อทราบขนาดท่อและชนิดวาล์วปลายทางอยู่แล้ว และต้องการคำนวณหา <u>อัตราการไหลจริง (Actual Flow)</u></li>
+                        <li><b>โหมด 3 (โครงข่าย 2 ถัง):</b> สำหรับจำลองการแยกท่อเข้าถังเก็บ 2 ใบ สามารถคำนวณทั้งกรณี <b>เปิดเติมพร้อมกัน (Network)</b>, <b>เติมเฉพาะถังที่ 1 (Single Pipe)</b> และ <b>เติมเฉพาะถังที่ 2 (Series Pipe)</b> รวมถึงพล็อตกราฟ 24 ชั่วโมง</li>
                     </ul>
 
-                    <h3>2. ทฤษฎีชลศาสตร์และการสูญเสียแรงดัน (Head Loss)</h3>
-                    <p>การคำนวณอัตราการไหลภายในระบบท่อใช้หลักการสมดุลของสมการพลังงานเบอร์นูลลี (Bernoulli's Energy Equation) โดยพิจารณาแรงดันน้ำประปาต้นทาง หักลบด้วยความสูง และการสูญเสียพลังงานในระบบ</p>
+                    <h3>2. การคำนวณ ΣK อัตโนมัติ (Minor Losses Calculation)</h3>
+                    <p>ในเวอร์ชันนี้ ระบบสามารถบวกค่า สัมประสิทธิ์การสูญเสียรอง (Minor Loss Coefficient, K) ได้อัตโนมัติจากการระบุจำนวนข้อต่อ โดยมีค่ามาตรฐานดังนี้:</p>
+                    <ul>
+                        <li>ข้องอ 90° (Standard Elbow 90°) = <b>1.0</b></li>
+                        <li>ข้องอ 45° (Standard Elbow 45°) = <b>0.4</b></li>
+                        <li>สามทางแยก/เลี้ยว (Tee, Branch flow) = <b>1.8</b></li>
+                        <li>ประตูน้ำ/เกทวาล์วเปิดสุด (Gate Valve, Fully open) = <b>0.2</b></li>
+                        <li>กันกลับ/เช็ควาล์วแบบสวิง (Swing Check Valve) = <b>2.5</b></li>
+                    </ul>
+
+                    <h3>3. ทฤษฎีชลศาสตร์และการสูญเสียแรงดัน (Head Loss)</h3>
+                    <p>การคำนวณใช้วิธีสมดุลสมการพลังงานเบอร์นูลลี (Bernoulli's Energy Equation) โดยพิจารณาแรงดันน้ำประปาต้นทาง หักลบด้วยความสูง และการสูญเสียพลังงานในระบบ</p>
                     
                     <div class="equation-box">
                         <b>สมการพลังงาน (Energy Equation):</b>
-                        $$ H_1 - \Delta z = h_f + h_m + h_{float} + \frac{v^2}{2g} $$
+                        $$ H_1 - \Delta z = h_f + h_m + h_{valve} + \frac{v^2}{2g} $$
                     </div>
-                    <p class="text-xs text-slate-500 mt-2">โดยที่: \(H_1\) = แรงดันต้นทาง, \(\Delta z\) = ความสูงปลายท่อ, \(h_f\) = Friction Loss, \(h_m\) = Minor Loss, \(v^2/2g\) = Kinetic Energy ที่ปลายท่อ</p>
+                    <p class="text-xs text-slate-500 mt-2">โดยที่: \(H_1\) = แรงดันต้นทาง, \(\Delta z\) = ความสูงปลายท่อ, \(h_f\) = Friction Loss, \(h_m\) = Minor Loss ข้อต่อ, \(h_{valve}\) = Loss ที่วาล์วปลายทาง, \(v^2/2g\) = Kinetic Energy ที่ปลายท่อ</p>
 
                     <div class="equation-box">
                         <b>การสูญเสียหลักจากความเสียดทานท่อ (Hazen-Williams Equation):</b>
                         $$ h_f = 10.67 \cdot L \cdot \left(\frac{Q}{C}\right)^{1.852} \frac{1}{D^{4.87}} $$
                     </div>
                     <p class="text-xs text-slate-500 mt-2">โดยที่: \(L\) = ความยาวท่อ (m), \(Q\) = อัตราการไหล (m³/s), \(C\) = ค่าความขรุขระ (ท่อพลาสติก C=140), \(D\) = เส้นผ่านศูนย์กลางภายในท่อ (m)</p>
-
-                    <div class="equation-box">
-                        <b>การสูญเสียรองจากข้อต่อและวาล์ว (Minor Loss):</b>
-                        $$ h_m = K \frac{v^2}{2g} $$
-                    </div>
-                    <p class="text-xs text-slate-500 mt-2">โดยที่: \(K\) = สัมประสิทธิ์การสูญเสีย (เช่น ข้องอ 90 องศา K≈1.0, วาล์วลูกลอย K≈10.0), \(v\) = ความเร็วน้ำในท่อ (m/s), \(g\) = แรงโน้มถ่วง 9.81 m/s²</p>
-
-                    <h3>3. การแก้สมการโครงข่าย (Network Solver)</h3>
-                    <p>ในโหมด 3 ที่มีการแยกท่อ น้ำจะไหลไปตามความต้านทานของแต่ละสาย ระบบใช้ระเบียบวิธีเชิงตัวเลข <b>Newton-Raphson Method</b> เพื่อแก้ระบบสมการแบบไม่เชิงเส้น (Non-linear equations) 2 ตัวแปรพร้อมกัน เพื่อหาค่า \(Q_1\) และ \(Q_2\) ที่ทำให้พลังงานที่จุดแยก (Junction) สมดุลกับปลายทางทั้งสองถัง</p>
 
                     <p class="text-center mt-6 text-slate-400 text-xs"><i>Developed for accurate water supply plumbing design.</i></p>
                 </div>
@@ -530,19 +635,22 @@
             });
 
             const pipeSelectsWithAuto = ['m1_manualPipeSize', 'm3_pipeSize1', 'm3_pipeSize2'];
-            const pipeSelectsStandard = ['m1_floatSize', 'm2_pipeSize', 'm2_floatSize', 'm3_float1', 'm3_float2'];
+            const pipeSelectsStandard = ['m1_endValveSize', 'm2_pipeSize', 'm2_endValveSize', 'm3_endValveSize1', 'm3_endValveSize2'];
             pipesData.forEach((p, i) => {
                 pipeSelectsWithAuto.forEach(id => { let el = document.getElementById(id); if(el) el.add(new Option(p.name, i)); });
                 pipeSelectsStandard.forEach(id => { let el = document.getElementById(id); if(el) el.add(new Option(p.name, i)); });
             });
             
-            document.getElementById('m1_floatSize').selectedIndex = 0; 
+            document.getElementById('m1_endValveSize').selectedIndex = 0; 
             document.getElementById('m2_pipeSize').selectedIndex = 1; 
-            document.getElementById('m2_floatSize').selectedIndex = 0; 
-            document.getElementById('m3_float1').selectedIndex = 0; 
-            document.getElementById('m3_float2').selectedIndex = 0; 
+            document.getElementById('m2_endValveSize').selectedIndex = 0; 
+            document.getElementById('m3_endValveSize1').selectedIndex = 0; 
+            document.getElementById('m3_endValveSize2').selectedIndex = 0; 
             
             generateHourlyInputs(); 
+            
+            // Initialize K calculations
+            calcK('m1'); calcK('m2'); calcK('m3_1'); calcK('m3_2');
             
             // Set date for print header
             const today = new Date();
@@ -565,10 +673,8 @@
             document.getElementById('input-mode1').classList.toggle('hidden', mode !== 'mode1');
             document.getElementById('input-mode2').classList.toggle('hidden', mode !== 'mode2');
             document.getElementById('input-mode3').classList.toggle('hidden', mode !== 'mode3');
-            // Hide input section entirely if Mode 4
             document.getElementById('input-section').style.display = (mode === 'mode4') ? 'none' : 'block';
             
-            // Adjust Output section span for mode 4 (make it full width)
             const outPanel = document.getElementById('printable-report');
             if(mode === 'mode4') {
                 outPanel.className = "lg:col-span-12 glass-panel rounded-xl p-4 md:p-6 flex flex-col h-full relative overflow-hidden";
@@ -581,7 +687,7 @@
             document.getElementById('output-mode2').classList.add('hidden');
             document.getElementById('output-mode3').classList.add('hidden');
             document.getElementById('output-mode4').classList.toggle('hidden', mode !== 'mode4');
-            document.getElementById('print-inputs-summary').style.display = 'none'; // Hide print summary when switching tabs
+            document.getElementById('print-inputs-summary').style.display = 'none'; 
             
             const badges = { 'mode1':'Mode 1: ออกแบบ & จำลองลูกลอย', 'mode2':'Mode 2: Free Flow ท่อเดี่ยว', 'mode3':'Mode 3: โครงข่ายท่อแยก', 'mode4':'Theory' };
             const colors = { 'mode1':'bg-blue-100 text-blue-800', 'mode2':'bg-emerald-100 text-emerald-800', 'mode3':'bg-indigo-100 text-indigo-800', 'mode4':'bg-slate-100' };
@@ -595,6 +701,23 @@
             if(mode === 'mode4' && window.MathJax) {
                 MathJax.typesetPromise();
             }
+        }
+
+        // ==========================================
+        // 🛠️ K-FACTOR CALCULATOR
+        // ==========================================
+        function calcK(mode) {
+            const el90 = parseInt(document.getElementById(mode + '_k_el90').value) || 0;
+            const el45 = parseInt(document.getElementById(mode + '_k_el45').value) || 0;
+            const tee = parseInt(document.getElementById(mode + '_k_tee').value) || 0;
+            const gate = parseInt(document.getElementById(mode + '_k_gate').value) || 0;
+            const check = parseInt(document.getElementById(mode + '_k_check').value) || 0;
+            const other = parseFloat(document.getElementById(mode + '_k_other').value) || 0;
+
+            const totalK = (el90 * 1.0) + (el45 * 0.4) + (tee * 1.8) + (gate * 0.2) + (check * 2.5) + other;
+            
+            document.getElementById(mode + '_sumK_display').textContent = totalK.toFixed(2);
+            document.getElementById(mode + '_minorK').value = totalK;
         }
 
         function generateHourlyInputs() {
@@ -748,6 +871,57 @@
             return { Q1: Q1_m3h, Q2: Q2_m3h, Qtot: Qtot_m3h, Qtot_theo, v1, v2, hf1, hm1, hf2, hm2, h_float1, h_float2, bottleneck, overload };
         }
 
+        function solveFreeFlowSeries(H1, Z2, L1, D1, K1, L2, D2, K2, D_float, K_float, meter) {
+            let netHead = H1 - Z2;
+            if (netHead <= 0) return { Q_m3h: 0, Q_theo: 0, v1: 0, v2: 0, hf1: 0, hm1: 0, hf2: 0, hm2: 0, h_float: 0, v2g: 0, bottleneck: false, overload: false };
+
+            let Q_est = 0.001, error = 1, iter = 0;
+            let v1, v2, v_exit, hf1, hm1, hf2, hm2, h_float, v2g_exit;
+
+            while(error > 0.0001 && iter < 100) {
+                v1 = getVelocity(Q_est, D1);
+                v2 = getVelocity(Q_est, D2);
+                v_exit = getVelocity(Q_est, D_float);
+                v2g_exit = Math.pow(v_exit, 2) / (2 * g);
+
+                hf1 = getHeadLoss(Q_est, L1, D1);
+                hm1 = getMinorLoss(Q_est, D1, K1);
+                hf2 = getHeadLoss(Q_est, L2, D2);
+                hm2 = getMinorLoss(Q_est, D2, K2);
+                h_float = getMinorLoss(Q_est, D_float, K_float);
+
+                let calcHead = hf1 + hm1 + hf2 + hm2 + h_float + v2g_exit;
+                let Q_new = Q_est * Math.pow((netHead / calcHead), 0.54);
+                error = Math.abs(Q_new - Q_est) / Q_est;
+                Q_est = Q_new;
+                iter++;
+            }
+
+            let Q_theo = Q_est * 3600;
+            let Q_m3h = Q_theo;
+            let bottleneck = false, overload = false;
+
+            if (Q_m3h > meter.maxQ) {
+                Q_m3h = meter.maxQ;
+                Q_est = Q_m3h / 3600;
+                bottleneck = true;
+            } else if (Q_m3h > meter.nomQ) {
+                overload = true;
+            }
+
+            v1 = getVelocity(Q_est, D1);
+            v2 = getVelocity(Q_est, D2);
+            v_exit = getVelocity(Q_est, D_float);
+            v2g_exit = Math.pow(v_exit, 2) / (2 * g);
+            hf1 = getHeadLoss(Q_est, L1, D1);
+            hm1 = getMinorLoss(Q_est, D1, K1);
+            hf2 = getHeadLoss(Q_est, L2, D2);
+            hm2 = getMinorLoss(Q_est, D2, K2);
+            h_float = getMinorLoss(Q_est, D_float, K_float);
+
+            return { Q1: 0, Q2: Q_m3h, Qtot: Q_m3h, Qtot_theo: Q_theo, v1, v2, hf1, hm1, hf2, hm2, h_float1: 0, h_float2: h_float, bottleneck, overload };
+        }
+
         function updateBottleneckBox(modeId, isBottleneck, qTheo, meterMax) {
             let bnBox = document.getElementById(modeId + '_bottleneckBox');
             if (isBottleneck) {
@@ -775,12 +949,13 @@
             const L = parseFloat(document.getElementById('m1_pipeLength').value);
             const dz = parseFloat(document.getElementById('m1_elevation').value);
             const P1_bar = parseFloat(document.getElementById('m1_pressure').value);
-            const sumK = parseFloat(document.getElementById('m1_minorK').value);
+            
+            const sumK = parseFloat(document.getElementById('m1_minorK').value) || 0;
             const manPipe = document.getElementById('m1_manualPipeSize').value;
             
-            const hasFloat = parseInt(document.getElementById('m1_hasFloat').value);
-            const floatPipe = pipesData[document.getElementById('m1_floatSize').value];
-            const K_float = hasFloat === 1 ? 10.0 : 0.0;
+            const endValveK = parseFloat(document.getElementById('m1_endValveK').value);
+            const endValveSizeObj = pipesData[document.getElementById('m1_endValveSize').value];
+            const endValveTypeName = document.getElementById('m1_endValveK').options[document.getElementById('m1_endValveK').selectedIndex].text.split(' (')[0];
 
             if (isNaN(daily) || isNaN(hrs) || isNaN(L) || isNaN(dz) || isNaN(P1_bar)) return alert("ข้อมูลไม่ครบ");
 
@@ -808,16 +983,16 @@
             }
             let P2_bar_req = P2_head_req / 10.197;
 
-            let sim = solveFreeFlowSingle(H1, dz, L, pipe.D, sumK, floatPipe.D, K_float, meter);
+            let sim = solveFreeFlowSingle(H1, dz, L, pipe.D, sumK, endValveSizeObj.D, endValveK, meter);
 
-            // Populate Print Summary
             populatePrintSummary('mode1', `
                 <ul class="grid grid-cols-2 gap-2">
                     <li><b>ปริมาณน้ำต้องการ:</b> ${daily} L/day (${hrs} hr/day)</li>
                     <li><b>ท่อที่คำนวณได้:</b> ${pipe.name}</li>
                     <li><b>แรงดัน P1:</b> ${P1_bar} Bar</li>
                     <li><b>ความสูง/ระยะท่อ:</b> ${dz} m / ${L} m</li>
-                    <li><b>ปลายท่อ (ลูกลอย):</b> ${floatPipe.name} ${hasFloat ? '(มีลูกลอย)' : '(ปล่อยอิสระ)'}</li>
+                    <li><b>ข้อต่อ/วาล์ว ΣK:</b> ${sumK.toFixed(2)}</li>
+                    <li><b>ปลายท่อ:</b> ${endValveSizeObj.name} ${endValveTypeName}</li>
                 </ul>
             `);
 
@@ -831,7 +1006,7 @@
             document.getElementById('m1_resP2Bar').className = P2_head_req >= 0 ? "text-blue-600" : "text-red-600";
 
             document.getElementById('m1_resActualFlow').textContent = sim.Q_m3h.toFixed(2);
-            document.getElementById('m1_resFloatName').textContent = floatPipe.name + (hasFloat ? " (มีลูกลอย)" : " (ปล่อยอิสระ)");
+            document.getElementById('m1_resFloatName').textContent = endValveSizeObj.name + " (" + endValveTypeName + ")";
 
             updateBottleneckBox('m1', sim.bottleneck, sim.Q_theo, meter.maxQ);
 
@@ -873,7 +1048,7 @@
                 status.innerHTML = msg;
             } else {
                 status.className = 'p-3 rounded-lg text-sm mt-auto border bg-orange-50 border-orange-200 text-orange-800';
-                status.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-orange-600"></i><b>ความเร็วตก:</b> อัตราไหลจริง (${sim.Q_m3h.toFixed(2)}) <b>ต่ำกว่า</b> ความต้องการ (${targetQ_m3h.toFixed(2)}) เนื่องจากลูกลอย, มาตรวัดน้ำ หรือท่อเล็กเกินไป เป็นคอขวดทำให้เสียแรงดัน`;
+                status.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-orange-600"></i><b>ความเร็วตก:</b> อัตราไหลจริง (${sim.Q_m3h.toFixed(2)}) <b>ต่ำกว่า</b> ความต้องการ (${targetQ_m3h.toFixed(2)}) เนื่องจากวาล์วปลายท่อ, มาตรวัดน้ำ หรือท่อเล็กเกินไป เป็นคอขวดทำให้เสียแรงดัน`;
             }
             if (window.MathJax) { MathJax.typesetPromise(); }
         }
@@ -885,28 +1060,29 @@
             const P1_bar = parseFloat(document.getElementById('m2_pressure').value);
             const dz = parseFloat(document.getElementById('m2_elevation').value);
             const L = parseFloat(document.getElementById('m2_pipeLength').value);
-            const K_main = parseFloat(document.getElementById('m2_minorK').value);
-            const hasFloat = parseInt(document.getElementById('m2_hasFloat').value);
+            const sumK = parseFloat(document.getElementById('m2_minorK').value) || 0;
             
             const meter = metersData[document.getElementById('m2_meterSize').value];
             const pipe = pipesData[document.getElementById('m2_pipeSize').value];
-            const floatPipe = pipesData[document.getElementById('m2_floatSize').value];
+            
+            const endValveK = parseFloat(document.getElementById('m2_endValveK').value);
+            const endValveSizeObj = pipesData[document.getElementById('m2_endValveSize').value];
+            const endValveTypeName = document.getElementById('m2_endValveK').options[document.getElementById('m2_endValveK').selectedIndex].text.split(' (')[0];
             
             if (isNaN(P1_bar) || isNaN(dz) || isNaN(L)) return alert("ข้อมูลไม่ครบ");
 
             const H1 = P1_bar * 10.197;
-            const K_float = hasFloat === 1 ? 10.0 : 0.0;
 
-            let sim = solveFreeFlowSingle(H1, dz, L, pipe.D, K_main, floatPipe.D, K_float, meter);
+            let sim = solveFreeFlowSingle(H1, dz, L, pipe.D, sumK, endValveSizeObj.D, endValveK, meter);
 
-            // Populate Print Summary
             populatePrintSummary('mode2', `
                 <ul class="grid grid-cols-2 gap-2">
                     <li><b>แรงดัน P1:</b> ${P1_bar} Bar</li>
                     <li><b>ความสูง Δz:</b> ${dz} m</li>
                     <li><b>ท่อเมน/ระยะ:</b> ${pipe.name} / ${L} m</li>
                     <li><b>มาตรวัดน้ำ:</b> ${meter.name}</li>
-                    <li><b>ปลายท่อ:</b> ${floatPipe.name} ${hasFloat ? '(มีลูกลอย)' : '(ปล่อยอิสระ)'}</li>
+                    <li><b>ข้อต่อ/วาล์ว ΣK:</b> ${sumK.toFixed(2)}</li>
+                    <li><b>ปลายท่อ:</b> ${endValveSizeObj.name} ${endValveTypeName}</li>
                 </ul>
             `);
 
@@ -917,7 +1093,7 @@
             document.getElementById('m2_resFlowLPM').textContent = `${(sim.Q_m3h*1000/60).toFixed(1)} L/min`;
             document.getElementById('m2_resPipeSize').textContent = pipe.name;
             document.getElementById('m2_resMeterSize').innerHTML = `${meter.name}`;
-            document.getElementById('m2_resFloatSize').textContent = floatPipe.name + (hasFloat ? " (มีลูกลอย)" : "");
+            document.getElementById('m2_resFloatSize').textContent = endValveSizeObj.name + " (" + endValveTypeName + ")";
 
             updateBottleneckBox('m2', sim.bottleneck, sim.Q_theo, meter.maxQ);
 
@@ -926,11 +1102,11 @@
             <div class="space-y-2 text-slate-700">
                 <p><b>1. ข้อมูลตัวแปรนำเข้า (Given Parameters):</b><br>
                    แรงดันต้นทาง \\( P_1 = ${P1_bar} \\text{ Bar} \\Rightarrow H_1 = ${H1.toFixed(2)} \\text{ mH}_2\\text{O} \\)<br>
-                   ความสูง \\( \\Delta z = ${dz} \\text{ m} \\), ระยะทางท่อ \\( L = ${L} \\text{ m} \\)<br>
+                   ความสูง \\( \\Delta z = ${dz} \\text{ m} \\), ระยะทางท่อ \\( L = ${L} \\text{ m} \\), ข้อต่อท่อ \\( \\Sigma K = ${sumK} \\)<br>
                    พลังงานสุทธิ (Net Head) \\( = ${(H1-dz).toFixed(2)} \\text{ m} \\)
                 </p>
                 <p><b>2. สมการสมดุลพลังงาน (Bernoulli's Free Flow Equation):</b><br>
-                   $$ H_1 - \\Delta z = h_f + h_{m(pipe)} + h_{m(float)} + \\frac{v_{exit}^2}{2g} $$
+                   $$ H_1 - \\Delta z = h_f + h_{m(pipe)} + h_{valve} + \\frac{v_{exit}^2}{2g} $$
                 </p>
                 <p><b>3. ผลการแก้สมการ (Numerical Iteration Results):</b><br>
                    ได้อัตราการไหลตามทฤษฎี \\( Q = ${sim.Q_theo.toFixed(2)} \\text{ m}^3/\\text{h} \\)
@@ -954,7 +1130,7 @@
             } else {
                 let msg = `<i class="fa-solid fa-check-circle mr-1 text-emerald-600"></i><b>วิเคราะห์สำเร็จ</b>`;
                 if (sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 font-bold text-xs">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Qn=${meter.nomQ}) ควรพิจารณาขยายมาตรวัดน้ำเพื่อรักษาความแม่นยำ</div>`;
-                if (floatPipe.D < pipe.D) msg += `<div class="mt-1 text-slate-600 text-xs">คอขวดที่ปลายทางเกิด Head Loss = ${sim.h_float.toFixed(2)} m</div>`;
+                if (endValveSizeObj.D < pipe.D) msg += `<div class="mt-1 text-slate-600 text-xs">คอขวดที่ปลายทางเกิด Head Loss = ${sim.h_float.toFixed(2)} m</div>`;
                 
                 status.className = 'p-3 rounded-lg text-sm mt-auto border bg-emerald-50 border-emerald-200 text-emerald-800';
                 status.innerHTML = msg;
@@ -986,7 +1162,7 @@
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
-                        customCanvasBackgroundColor: { color: 'white' } // Ensure white bg for print
+                        customCanvasBackgroundColor: { color: 'white' } 
                     },
                     scales: {
                         x: { title: { display: true, text: 'เวลา (ชั่วโมง)', font: { size: 10 } } },
@@ -999,29 +1175,29 @@
 
         function calculateMode3() {
             const is24h = document.querySelector('input[name="m3_simType"]:checked').value === '24h';
+            const valveStatus = document.getElementById('m3_valveStatus').value;
             
             const L_meter = parseFloat(document.getElementById('m3_meterLength').value) || 0;
             const targetQ1 = parseFloat(document.getElementById('m3_q1').value);
             const L1 = parseFloat(document.getElementById('m3_l1').value);
             const Z1 = parseFloat(document.getElementById('m3_z1').value);
-            const K1 = parseFloat(document.getElementById('m3_minorK1').value) || 0;
-            const hasFloat1 = parseInt(document.getElementById('m3_hasFloat1').value);
-            const float1 = pipesData[document.getElementById('m3_float1').value];
+            const K1 = parseFloat(document.getElementById('m3_1_minorK').value) || 0;
             
             const targetQ2 = parseFloat(document.getElementById('m3_q2').value);
             const L2 = parseFloat(document.getElementById('m3_l2').value);
             const Z2 = parseFloat(document.getElementById('m3_z2').value);
-            const K2 = parseFloat(document.getElementById('m3_minorK2').value) || 0;
-            const hasFloat2 = parseInt(document.getElementById('m3_hasFloat2').value);
-            const float2 = pipesData[document.getElementById('m3_float2').value];
+            const K2 = parseFloat(document.getElementById('m3_2_minorK').value) || 0;
             
             if (isNaN(L1) || isNaN(Z1) || isNaN(L2) || isNaN(Z2)) return alert("ข้อมูลไม่ครบ");
 
             const Leff1 = Math.max(0.1, L1 - L_meter);
             const targetQ_tot = targetQ1 + targetQ2; 
 
-            const K_f1 = hasFloat1 === 1 ? 10.0 : 0.0;
-            const K_f2 = hasFloat2 === 1 ? 10.0 : 0.0;
+            const endValveK1 = parseFloat(document.getElementById('m3_endValveK1').value);
+            const float1 = pipesData[document.getElementById('m3_endValveSize1').value];
+
+            const endValveK2 = parseFloat(document.getElementById('m3_endValveK2').value);
+            const float2 = pipesData[document.getElementById('m3_endValveSize2').value];
 
             const manMeter = document.getElementById('m3_meterSize').value;
             const meter = manMeter === 'auto' ? (metersData.find(m => targetQ_tot <= m.nomQ * 1.25) || metersData[metersData.length-1]) : metersData[parseInt(manMeter)];
@@ -1034,16 +1210,54 @@
             const pipe2 = manPipe2 === 'auto' ? (pipesData.find(p => getVelocity(targetQ2/3600, p.D) <= 1.5) || pipesData[pipesData.length-1]) : pipesData[parseInt(manPipe2)];
             const D2 = pipe2.D;
 
+            function runM3Sim(H1_val) {
+                let simResult = { Q1: 0, Q2: 0, Qtot: 0, Qtot_theo: 0, v1: 0, v2: 0, hf1: 0, hm1: 0, hf2: 0, hm2: 0, h_float1: 0, h_float2: 0, bottleneck: false, overload: false };
+
+                if (valveStatus === 'both') {
+                    simResult = solveFreeFlowNetwork(H1_val, Z1, Z2, Leff1, L2, D1, D2, K1, K2, float1.D, float2.D, endValveK1, endValveK2, meter);
+                } else if (valveStatus === 'tank1') {
+                    let singleSim = solveFreeFlowSingle(H1_val, Z1, Leff1, D1, K1, float1.D, endValveK1, meter);
+                    simResult.Q1 = singleSim.Q_m3h;
+                    simResult.Qtot = singleSim.Q_m3h;
+                    simResult.Qtot_theo = singleSim.Q_theo;
+                    simResult.v1 = singleSim.v_main;
+                    simResult.hf1 = singleSim.hf;
+                    simResult.hm1 = singleSim.hm;
+                    simResult.h_float1 = singleSim.h_float;
+                    simResult.bottleneck = singleSim.bottleneck;
+                    simResult.overload = singleSim.overload;
+                } else if (valveStatus === 'tank2') {
+                    let seriesSim = solveFreeFlowSeries(H1_val, Z2, Leff1, D1, K1, L2, D2, K2, float2.D, endValveK2, meter);
+                    simResult.Q2 = seriesSim.Q_m3h;
+                    simResult.Qtot = seriesSim.Q_m3h;
+                    simResult.Qtot_theo = seriesSim.Q_theo;
+                    simResult.v1 = seriesSim.v1;
+                    simResult.v2 = seriesSim.v2;
+                    simResult.hf1 = seriesSim.hf1;
+                    simResult.hm1 = seriesSim.hm1;
+                    simResult.hf2 = seriesSim.hf2;
+                    simResult.hm2 = seriesSim.hm2;
+                    simResult.h_float2 = seriesSim.h_float;
+                    simResult.bottleneck = seriesSim.bottleneck;
+                    simResult.overload = seriesSim.overload;
+                }
+                return simResult;
+            }
+
             document.getElementById('initialState').classList.add('hidden');
             document.getElementById('output-mode3').classList.remove('hidden');
 
-            // Populate Print Summary
+            let scenarioText = "เปิดเติมน้ำ 2 ถังพร้อมกัน";
+            if(valveStatus === 'tank1') scenarioText = "เติมเฉพาะถังที่ 1 (ปิดวาล์วถัง 2)";
+            else if(valveStatus === 'tank2') scenarioText = "เติมเฉพาะถังที่ 2 (ปิดวาล์วถัง 1)";
+
             populatePrintSummary('mode3', `
                 <ul class="grid grid-cols-2 gap-2">
                     <li><b>มาตรวัดน้ำ:</b> ${meter.name}</li>
                     <li><b>รูปแบบจำลอง:</b> ${is24h ? '24 ชั่วโมง' : 'จุดเวลาเดียว'}</li>
-                    <li><b>ช่วง 1 (ไปถัง 1):</b> ท่อ ${pipe1.name}, L=${Leff1}m, Z=${Z1}m</li>
-                    <li><b>ช่วง 2 (ไปถัง 2):</b> ท่อ ${pipe2.name}, L=${L2}m, Z=${Z2}m</li>
+                    <li><b>สถานะวาล์ว:</b> <span class="text-indigo-600 font-bold">${scenarioText}</span></li>
+                    <li><b>ช่วง 1 (ไปถัง 1):</b> ท่อ ${pipe1.name}, L=${Leff1}m, Z=${Z1}m, ΣK=${K1.toFixed(2)}</li>
+                    <li><b>ช่วง 2 (ไปถัง 2):</b> ท่อ ${pipe2.name}, L=${L2}m, Z=${Z2}m, ΣK=${K2.toFixed(2)}</li>
                 </ul>
             `);
 
@@ -1051,7 +1265,8 @@
             if (!is24h) {
                 const P1_bar = parseFloat(document.getElementById('m3_pressure').value);
                 const H1 = P1_bar * 10.197;
-                let sim = solveFreeFlowNetwork(H1, Z1, Z2, Leff1, L2, D1, D2, K1, K2, float1.D, float2.D, K_f1, K_f2, meter);
+                
+                let sim = runM3Sim(H1);
 
                 document.getElementById('m3_output_single').classList.remove('hidden');
                 document.getElementById('m3_output_24h').classList.add('hidden');
@@ -1068,14 +1283,9 @@
 
                 updateBottleneckBox('m3', sim.bottleneck, sim.Qtot_theo, meter.maxQ);
 
-                let reportHtml = `
-                <h4 class="font-bold text-indigo-800 font-sans border-b pb-1 mb-2"><i class="fa-solid fa-file-invoice mr-1"></i> รายการคำนวณโครงข่าย (Network Calculation Report)</h4>
-                <div class="space-y-2 text-slate-700">
-                    <p><b>1. ข้อมูลตัวแปรนำเข้า (Given Parameters):</b><br>
-                       แรงดันต้นทาง \\( P_1 = ${P1_bar} \\text{ Bar} \\Rightarrow H_1 = ${H1.toFixed(2)} \\text{ mH}_2\\text{O} \\)<br>
-                       <b>ช่วงที่ 1 (ถึงถัง 1):</b> ท่อ ${pipe1.name}, ระยะทาง \\( L_1 = ${Leff1.toFixed(2)} \\text{ m} \\) (หักมาตร), ความสูง \\( Z_1 = ${Z1} \\text{ m} \\), \\( \\Sigma K_1 = ${K1} \\)<br>
-                       <b>ช่วงที่ 2 (แยกไปถัง 2):</b> ท่อ ${pipe2.name}, ระยะทาง \\( L_2 = ${L2} \\text{ m} \\), ความสูง \\( Z_2 = ${Z2} \\text{ m} \\), \\( \\Sigma K_2 = ${K2} \\)
-                    </p>
+                let eqHtml = "";
+                if (valveStatus === 'both') {
+                    eqHtml = `
                     <p><b>2. ระบบสมการชลศาสตร์ (System of Governing Equations):</b><br>
                        กำหนดให้ปริมาณน้ำไหลเข้าหลัก \\( Q_{tot} = Q_1 + Q_2 \\)<br>
                        พลังงานคงเหลือ ณ จุดแยก (Junction Head, \\( H_j \\)):<br>
@@ -1087,13 +1297,44 @@
                        - <b>สมการท่อเส้นที่ 2:</b> \\( f_2(Q_1, Q_2) = H_j - h_{f(L2)}(Q_2) - h_{m(L2)}(Q_2) - Z_2 - h_{float2}(Q_2) - \\frac{v_{ex2}^2}{2g} = 0 \\)
                     </p>
                     <p><b>4. ผลลัพธ์สมการแบบไม่เชิงเส้น (Newton-Raphson Solver Results):</b><br>
-                       ใช้กระบวนการทำซ้ำเพื่อหาค่า \\( Q_1 \\) และ \\( Q_2 \\) ที่ทำให้สมการเข้าใกล้สมดุลที่สุด<br>
-                       คำตอบที่ได้ตามทฤษฎี (Theoretical Free Flow):<br>
-                       - น้ำไหลลงถังที่ 1 (\\( Q_1 \\)) = ${sim.Q1.toFixed(3)} m³/h<br>
-                       - น้ำไหลลงถังที่ 2 (\\( Q_2 \\)) = ${sim.Q2.toFixed(3)} m³/h<br>
-                       - อัตราการไหลรวม (\\( Q_{tot} \\)) = ${sim.Qtot_theo.toFixed(3)} m³/h
+                       ใช้กระบวนการทำซ้ำเพื่อหาค่า \\( Q_1 \\) และ \\( Q_2 \\) ที่ทำให้สมการเข้าใกล้สมดุลที่สุด
+                    </p>`;
+                } else if (valveStatus === 'tank1') {
+                    eqHtml = `
+                    <p><b>2. สมการท่อเดี่ยว (Single Pipe - Flow to Tank 1):</b><br>
+                       เนื่องจากปิดวาล์วถัง 2 ระบบจึงกลายเป็นท่อเส้นเดียวไปยังถัง 1:<br>
+                       $$ H_1 - Z_1 = h_{f(L1)} + h_{m(L1)} + h_{valve1} + \\frac{v_{ex1}^2}{2g} $$
                     </p>
-                    ${sim.bottleneck ? `<p class="text-red-700"><b>5. ข้อจำกัดของมาตรวัดน้ำ:</b><br>เนื่องจากมาตร ${meter.name} รับได้สูงสุดที่ ${meter.maxQ} m³/h ปริมาณน้ำจึงถูกบีบลดทอนลงตามสัดส่วน (Proportional Throttle)</p>` : ``}
+                    <p><b>3. ผลการแก้สมการ (Iteration Results):</b><br>
+                       คำนวณอัตราการไหลโดยปรับเทียบความเร็วและ Head Loss จนสมดุล
+                    </p>`;
+                } else if (valveStatus === 'tank2') {
+                    eqHtml = `
+                    <p><b>2. สมการท่ออนุกรม (Series Pipe - Flow to Tank 2):</b><br>
+                       เนื่องจากปิดวาล์วถัง 1 น้ำทั้งหมดจะไหลผ่านช่วง 1 และต่อไปยังช่วง 2 (\\( Q_{tot} = Q_2 \\)):<br>
+                       $$ H_1 - Z_2 = (h_{f(L1)} + h_{m(L1)}) + (h_{f(L2)} + h_{m(L2)}) + h_{valve2} + \\frac{v_{ex2}^2}{2g} $$
+                    </p>
+                    <p><b>3. ผลการแก้สมการ (Iteration Results):</b><br>
+                       คำนวณอัตราการไหลในท่ออนุกรมโดยปรับเทียบความเร็วและ Head Loss จนสมดุล
+                    </p>`;
+                }
+
+                let reportHtml = `
+                <h4 class="font-bold text-indigo-800 font-sans border-b pb-1 mb-2"><i class="fa-solid fa-file-invoice mr-1"></i> รายการคำนวณโครงข่าย (Network Calculation Report)</h4>
+                <div class="space-y-2 text-slate-700">
+                    <p><b>1. ข้อมูลตัวแปรนำเข้า (Given Parameters):</b><br>
+                       สถานะระบบ: <span class="text-indigo-600 font-bold">${scenarioText}</span><br>
+                       แรงดันต้นทาง \\( P_1 = ${P1_bar} \\text{ Bar} \\Rightarrow H_1 = ${H1.toFixed(2)} \\text{ mH}_2\\text{O} \\)<br>
+                       <b>ช่วงที่ 1 (ถึงถัง 1):</b> ท่อ ${pipe1.name}, ระยะทาง \\( L_1 = ${Leff1.toFixed(2)} \\text{ m} \\) (หักมาตร), ความสูง \\( Z_1 = ${Z1} \\text{ m} \\), \\( \\Sigma K_1 = ${K1.toFixed(2)} \\)<br>
+                       <b>ช่วงที่ 2 (แยกไปถัง 2):</b> ท่อ ${pipe2.name}, ระยะทาง \\( L_2 = ${L2} \\text{ m} \\), ความสูง \\( Z_2 = ${Z2} \\text{ m} \\), \\( \\Sigma K_2 = ${K2.toFixed(2)} \\)
+                    </p>
+                    ${eqHtml}
+                    <p><b>สรุปคำตอบที่ได้ตามทฤษฎี (Theoretical Free Flow):</b><br>
+                       - น้ำไหลลงถังที่ 1 (\\( Q_1 \\)) = ${sim.Q1.toFixed(3)} \\text{ m}^3/\\text{h}<br>
+                       - น้ำไหลลงถังที่ 2 (\\( Q_2 \\)) = ${sim.Q2.toFixed(3)} \\text{ m}^3/\\text{h}<br>
+                       - อัตราการไหลรวม (\\( Q_{tot} \\)) = ${sim.Qtot_theo.toFixed(3)} \\text{ m}^3/\\text{h}
+                    </p>
+                    ${sim.bottleneck ? `<p class="text-red-700"><b>* ข้อจำกัดของมาตรวัดน้ำ:</b><br>เนื่องจากมาตร ${meter.name} รับได้สูงสุดที่ ${meter.maxQ} m³/h ปริมาณน้ำจึงถูกบีบลดทอนลงตามสัดส่วน (Proportional Throttle)</p>` : ``}
                 </div>`;
                 document.getElementById('m3_calcReport').innerHTML = reportHtml;
 
@@ -1114,10 +1355,17 @@
                     status.innerHTML = '<i class="fa-solid fa-ban mr-1"></i> น้ำไม่ไหล: แรงดันไม่พอ';
                 } else {
                     let msg = `<i class="fa-solid fa-check-circle mr-1 text-indigo-600"></i><b>จำลองการไหลสำเร็จ</b>`;
-                    if(sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 text-xs font-bold">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Qn=${meter.nomQ}) ของมาตรวัดน้ำ</div>`;
                     
-                    if(sim.Q1 === 0) msg += `<div class="mt-1 text-orange-600 text-xs">ไหลลงถัง 2 เท่านั้น (ถัง 1 สูงไป)</div>`;
-                    else if(sim.Q2 === 0) msg += `<div class="mt-1 text-orange-600 text-xs">ไหลลงถัง 1 เท่านั้น (แรงดันจุดแยกไม่พอไปถัง 2)</div>`;
+                    if (valveStatus === 'both') {
+                        if(sim.Q1 === 0) msg += `<div class="mt-1 text-orange-600 text-xs">ไหลลงถัง 2 เท่านั้น (ถัง 1 สูงเกินแรงดัน)</div>`;
+                        else if(sim.Q2 === 0) msg += `<div class="mt-1 text-orange-600 text-xs">ไหลลงถัง 1 เท่านั้น (แรงดันจุดแยกไม่พอไปถัง 2)</div>`;
+                    } else if (valveStatus === 'tank1') {
+                        msg += `<div class="mt-1 text-sky-600 font-bold text-xs"><i class="fa-solid fa-info-circle mr-1"></i>จำลองสถานะ: เติมเฉพาะถัง 1</div>`;
+                    } else if (valveStatus === 'tank2') {
+                        msg += `<div class="mt-1 text-sky-600 font-bold text-xs"><i class="fa-solid fa-info-circle mr-1"></i>จำลองสถานะ: เติมเฉพาะถัง 2</div>`;
+                    }
+
+                    if(sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 text-xs font-bold">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Qn=${meter.nomQ}) ของมาตรวัดน้ำ</div>`;
                     
                     if((Leff1 > 0 ? (sim.hf1 / Leff1)*100 : 0) > 10 || (L2 > 0 ? (sim.hf2 / L2)*100 : 0) > 10) {
                         msg += `<div class="mt-1 text-red-600 text-xs"><i class="fa-solid fa-bolt mr-1"></i> Unit Hf > 10 m/100m ท่อเล็กเกินไป ท่อจะสั่นและเสียงดัง</div>`;
@@ -1142,7 +1390,7 @@
                     if(isNaN(P1_bar)) P1_bar = 0;
                     let H1 = P1_bar * 10.197;
 
-                    let sim = solveFreeFlowNetwork(H1, Z1, Z2, Leff1, L2, D1, D2, K1, K2, float1.D, float2.D, K_f1, K_f2, meter);
+                    let sim = runM3Sim(H1);
                     
                     labels.push(`${i}:00`);
                     pData.push(P1_bar);
