@@ -538,15 +538,123 @@
                     
                     <div class="equation-box">
                         <b>สมการพลังงาน (Energy Equation):</b>
-                        $$ H_1 - \Delta z = h_f + h_m + h_{valve} + \frac{v^2}{2g} $$
+                        $$H_1 - \Delta z = h_f + h_m + h_{valve} + \frac{v^2}{2g}$$
                     </div>
                     <p class="text-xs text-slate-500 mt-2">โดยที่: \(H_1\) = แรงดันต้นทาง, \(\Delta z\) = ความสูงปลายท่อ, \(h_f\) = Friction Loss, \(h_m\) = Minor Loss ข้อต่อ, \(h_{valve}\) = Loss ที่วาล์วปลายทาง, \(v^2/2g\) = Kinetic Energy ที่ปลายท่อ</p>
 
                     <div class="equation-box">
                         <b>การสูญเสียหลักจากความเสียดทานท่อ (Hazen-Williams Equation):</b>
-                        $$ h_f = 10.67 \cdot L \cdot \left(\frac{Q}{C}\right)^{1.852} \frac{1}{D^{4.87}} $$
+                        $$h_f = 10.67 \cdot L \cdot \left(\frac{Q}{C}\right)^{1.852} \frac{1}{D^{4.87}}$$
                     </div>
                     <p class="text-xs text-slate-500 mt-2">โดยที่: \(L\) = ความยาวท่อ (m), \(Q\) = อัตราการไหล (m³/s), \(C\) = ค่าความขรุขระ (ท่อพลาสติก C=140), \(D\) = เส้นผ่านศูนย์กลางภายในท่อ (m)</p>
+
+                    <div class="equation-box">
+                        <b>การสูญเสียรองจากข้อต่อและวาล์ว (Minor Loss):</b>
+                        $$h_m = K \frac{v^2}{2g}$$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">โดยที่: \(K\) = สัมประสิทธิ์การสูญเสีย (เช่น ข้องอ 90 องศา K≈1.0, วาล์วลูกลอย K≈10.0), \(v\) = ความเร็วน้ำในท่อ (m/s), \(g\) = แรงโน้มถ่วง 9.81 m/s²</p>
+
+                    <h3>4. พิกัดอัตราการไหลของมาตรวัดน้ำ (Water Meter Flow Rates)</h3>
+                    <p>อ้างอิงตามมาตรฐาน ISO 4064 / OIML R49 เพื่อประสิทธิภาพและอายุการใช้งานที่ยาวนานของมาตรวัดน้ำ:</p>
+                    <ul>
+                        <li><b>Q₁ (Minimum Flow Rate):</b> อัตราการไหลต่ำสุดที่สามารถวัดได้ภายใต้ขีดจำกัดความคลาดเคลื่อน</li>
+                        <li><b>Q₂ (Transitional Flow Rate):</b> อัตราการไหลรอยต่อระหว่างขีดจำกัดความคลาดเคลื่อนต่ำและสูง</li>
+                        <li><b>Q₃ (Permanent Flow Rate หรือ Qn):</b> อัตราการไหลทำงานปกติ สามารถทำงานต่อเนื่องได้โดยไม่สึกหรอ <u class="font-bold text-sky-600">ช่วงที่แนะนำให้ใช้งานที่สุดคือ Q₂ ถึง Q₃</u></li>
+                        <li><b>Q₄ (Overload Flow Rate หรือ Qmax):</b> อัตราการไหลสูงสุดที่ทนได้ในระยะเวลาสั้นๆ (หากเกิดกระแสไหลในระดับนี้นานๆ มาตรจะชำรุด หรือเกิดปัญหาคอขวด)</li>
+                    </ul>
+
+                    <div class="overflow-x-auto mt-4 mb-6">
+                        <table class="w-full text-xs text-left border border-slate-200">
+                            <thead class="bg-slate-100 text-slate-700">
+                                <tr>
+                                    <th class="py-2 px-3 border-b">ขนาดและชนิดมาตรวัดน้ำ</th>
+                                    <th class="py-2 px-3 border-b text-center">Transitional (Q₂) <br><span class="font-normal text-[10px]">(m³/h)</span></th>
+                                    <th class="py-2 px-3 border-b text-center text-sky-700">Permanent (Q₃) <br><span class="font-normal text-[10px]">(m³/h)</span></th>
+                                    <th class="py-2 px-3 border-b text-center text-red-600">Overload (Q₄) <br><span class="font-normal text-[10px]">(m³/h)</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">1/2" (15mm) Class B/C</td><td class="py-1 px-3 text-center">0.12</td><td class="py-1 px-3 text-center font-bold text-sky-700">1.5</td><td class="py-1 px-3 text-center text-red-600">3.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">1/2" (15mm) Turbine ISO R100/160</td><td class="py-1 px-3 text-center">0.025</td><td class="py-1 px-3 text-center font-bold text-sky-700">2.5</td><td class="py-1 px-3 text-center text-red-600">3.125</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">3/4" (20mm) Class B/C</td><td class="py-1 px-3 text-center">0.20</td><td class="py-1 px-3 text-center font-bold text-sky-700">2.5</td><td class="py-1 px-3 text-center text-red-600">5.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">3/4" (20mm) Turbine ISO R100/160</td><td class="py-1 px-3 text-center">0.04</td><td class="py-1 px-3 text-center font-bold text-sky-700">4.0</td><td class="py-1 px-3 text-center text-red-600">5.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">1" (25mm) Class B/C</td><td class="py-1 px-3 text-center">0.28</td><td class="py-1 px-3 text-center font-bold text-sky-700">3.5</td><td class="py-1 px-3 text-center text-red-600">7.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">1" (25mm) Turbine ISO R100/160</td><td class="py-1 px-3 text-center">0.063</td><td class="py-1 px-3 text-center font-bold text-sky-700">6.3</td><td class="py-1 px-3 text-center text-red-600">7.875</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">1.5" (40mm) Class B</td><td class="py-1 px-3 text-center">0.80</td><td class="py-1 px-3 text-center font-bold text-sky-700">10.0</td><td class="py-1 px-3 text-center text-red-600">20.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">1.5" (40mm) Turbine ISO R100/160</td><td class="py-1 px-3 text-center">0.16</td><td class="py-1 px-3 text-center font-bold text-sky-700">16.0</td><td class="py-1 px-3 text-center text-red-600">20.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">2" (50mm) Woltmann Class B/C</td><td class="py-1 px-3 text-center">3.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">15.0</td><td class="py-1 px-3 text-center text-red-600">30.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">2" (50mm) Electro/Ultra ISO R400/500</td><td class="py-1 px-3 text-center">0.16</td><td class="py-1 px-3 text-center font-bold text-sky-700">40.0</td><td class="py-1 px-3 text-center text-red-600">50.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">3" (80mm) Woltmann Class B/C</td><td class="py-1 px-3 text-center">8.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">40.0</td><td class="py-1 px-3 text-center text-red-600">80.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">3" (80mm) Ultrasonic ISO R500</td><td class="py-1 px-3 text-center">0.20</td><td class="py-1 px-3 text-center font-bold text-sky-700">63.0</td><td class="py-1 px-3 text-center text-red-600">78.75</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">3" (80mm) Electromagnetic ISO R400</td><td class="py-1 px-3 text-center">0.40</td><td class="py-1 px-3 text-center font-bold text-sky-700">100.0</td><td class="py-1 px-3 text-center text-red-600">125.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">4" (100mm) Woltmann Class B/C</td><td class="py-1 px-3 text-center">12.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">60.0</td><td class="py-1 px-3 text-center text-red-600">120.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">4" (100mm) Ultrasonic ISO R500</td><td class="py-1 px-3 text-center">0.32</td><td class="py-1 px-3 text-center font-bold text-sky-700">100.0</td><td class="py-1 px-3 text-center text-red-600">125.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">4" (100mm) Electromagnetic ISO R400</td><td class="py-1 px-3 text-center">0.64</td><td class="py-1 px-3 text-center font-bold text-sky-700">160.0</td><td class="py-1 px-3 text-center text-red-600">200.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">6" (150mm) Woltmann Class B/C</td><td class="py-1 px-3 text-center">30.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">150.0</td><td class="py-1 px-3 text-center text-red-600">300.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">6" (150mm) Ultrasonic ISO R500</td><td class="py-1 px-3 text-center">0.80</td><td class="py-1 px-3 text-center font-bold text-sky-700">250.0</td><td class="py-1 px-3 text-center text-red-600">312.5</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">6" (150mm) Electromagnetic ISO R400</td><td class="py-1 px-3 text-center">1.6</td><td class="py-1 px-3 text-center font-bold text-sky-700">400.0</td><td class="py-1 px-3 text-center text-red-600">500.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">8" (200mm) Woltmann Class B</td><td class="py-1 px-3 text-center">50.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">250.0</td><td class="py-1 px-3 text-center text-red-600">500.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">8" (200mm) Ultrasonic ISO R500</td><td class="py-1 px-3 text-center">1.28</td><td class="py-1 px-3 text-center font-bold text-sky-700">400.0</td><td class="py-1 px-3 text-center text-red-600">500.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">8" (200mm) Electromagnetic ISO R400</td><td class="py-1 px-3 text-center">2.52</td><td class="py-1 px-3 text-center font-bold text-sky-700">630.0</td><td class="py-1 px-3 text-center text-red-600">787.5</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">12" (300mm) Woltmann Class B</td><td class="py-1 px-3 text-center">120.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">600.0</td><td class="py-1 px-3 text-center text-red-600">1200.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">12" (300mm) Electro/Ultra ISO R400/500</td><td class="py-1 px-3 text-center">3.2</td><td class="py-1 px-3 text-center font-bold text-sky-700">1000.0</td><td class="py-1 px-3 text-center text-red-600">1250.0</td>
+                                </tr>
+                                <tr class="even:bg-slate-50 border-b border-slate-100">
+                                    <td class="py-1 px-3">16" (400mm) Woltmann Class B</td><td class="py-1 px-3 text-center">200.0</td><td class="py-1 px-3 text-center font-bold text-sky-700">1000.0</td><td class="py-1 px-3 text-center text-red-600">2000.0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>5. การแก้สมการโครงข่าย (Network Solver)</h3>
+                    <p>ในโหมด 3 ที่มีการแยกท่อ น้ำจะไหลไปตามความต้านทานของแต่ละสาย ระบบใช้ระเบียบวิธีเชิงตัวเลข <b>Newton-Raphson Method</b> เพื่อแก้ระบบสมการแบบไม่เชิงเส้น (Non-linear equations) 2 ตัวแปรพร้อมกัน เพื่อหาค่า \(Q_1\) และ \(Q_2\) ที่ทำให้พลังงานที่จุดแยก (Junction) สมดุลกับปลายทางทั้งสองถัง</p>
 
                     <p class="text-center mt-6 text-slate-400 text-xs"><i>Developed for accurate water supply plumbing design.</i></p>
                 </div>
@@ -567,31 +675,31 @@
         function getMinorLoss(Q, D, K) { if (Q <= 0) return 0; return K * Math.pow(getVelocity(Q, D), 2) / (2 * g); }
 
         const metersData = [
-            { name: '1/2" (15mm) Class B/C', D: 0.015, nomQ: 1.5, maxQ: 3.0 },
-            { name: '1/2" (15mm) Turbine ISO R100/160', D: 0.015, nomQ: 2.5, maxQ: 3.125 },
-            { name: '3/4" (20mm) Class B/C', D: 0.020, nomQ: 2.5, maxQ: 5.0 },
-            { name: '3/4" (20mm) Turbine ISO R100/160', D: 0.020, nomQ: 4.0, maxQ: 5.0 },
-            { name: '1" (25mm) Class B/C', D: 0.025, nomQ: 3.5, maxQ: 7.0 },
-            { name: '1" (25mm) Turbine ISO R100/160', D: 0.025, nomQ: 6.3, maxQ: 7.875 },
-            { name: '1.5" (40mm) Class B', D: 0.040, nomQ: 10.0, maxQ: 20.0 },
-            { name: '1.5" (40mm) Turbine ISO R100/160', D: 0.040, nomQ: 16.0, maxQ: 20.0 },
-            { name: '2" (50mm) Woltmann Class B/C', D: 0.050, nomQ: 15.0, maxQ: 30.0 },
-            { name: '2" (50mm) Electro/Ultra ISO R400/500', D: 0.050, nomQ: 40.0, maxQ: 50.0 },
-            { name: '3" (80mm) Woltmann Class B/C', D: 0.080, nomQ: 40.0, maxQ: 80.0 },
-            { name: '3" (80mm) Ultrasonic ISO R500', D: 0.080, nomQ: 63.0, maxQ: 78.75 },
-            { name: '3" (80mm) Electromagnetic ISO R400', D: 0.080, nomQ: 100.0, maxQ: 125.0 },
-            { name: '4" (100mm) Woltmann Class B/C', D: 0.100, nomQ: 60.0, maxQ: 120.0 },
-            { name: '4" (100mm) Ultrasonic ISO R500', D: 0.100, nomQ: 100.0, maxQ: 125.0 },
-            { name: '4" (100mm) Electromagnetic ISO R400', D: 0.100, nomQ: 160.0, maxQ: 200.0 },
-            { name: '6" (150mm) Woltmann Class B/C', D: 0.150, nomQ: 150.0, maxQ: 300.0 },
-            { name: '6" (150mm) Ultrasonic ISO R500', D: 0.150, nomQ: 250.0, maxQ: 312.5 },
-            { name: '6" (150mm) Electromagnetic ISO R400', D: 0.150, nomQ: 400.0, maxQ: 500.0 },
-            { name: '8" (200mm) Woltmann Class B', D: 0.200, nomQ: 250.0, maxQ: 500.0 },
-            { name: '8" (200mm) Ultrasonic ISO R500', D: 0.200, nomQ: 400.0, maxQ: 500.0 },
-            { name: '8" (200mm) Electromagnetic ISO R400', D: 0.200, nomQ: 630.0, maxQ: 787.5 },
-            { name: '12" (300mm) Woltmann Class B', D: 0.300, nomQ: 600.0, maxQ: 1200.0 },
-            { name: '12" (300mm) Electro/Ultra ISO R400/500', D: 0.300, nomQ: 1000.0, maxQ: 1250.0 },
-            { name: '16" (400mm) Woltmann Class B', D: 0.400, nomQ: 1000.0, maxQ: 2000.0 }
+            { name: '1/2" (15mm) Class B/C', D: 0.015, nomQ: 1.5, maxQ: 3.0, q2: 0.12, q3: 1.5 },
+            { name: '1/2" (15mm) Turbine ISO R100/160', D: 0.015, nomQ: 2.5, maxQ: 3.125, q2: 0.025, q3: 2.5 },
+            { name: '3/4" (20mm) Class B/C', D: 0.020, nomQ: 2.5, maxQ: 5.0, q2: 0.20, q3: 2.5 },
+            { name: '3/4" (20mm) Turbine ISO R100/160', D: 0.020, nomQ: 4.0, maxQ: 5.0, q2: 0.04, q3: 4.0 },
+            { name: '1" (25mm) Class B/C', D: 0.025, nomQ: 3.5, maxQ: 7.0, q2: 0.28, q3: 3.5 },
+            { name: '1" (25mm) Turbine ISO R100/160', D: 0.025, nomQ: 6.3, maxQ: 7.875, q2: 0.063, q3: 6.3 },
+            { name: '1.5" (40mm) Class B', D: 0.040, nomQ: 10.0, maxQ: 20.0, q2: 0.80, q3: 10.0 },
+            { name: '1.5" (40mm) Turbine ISO R100/160', D: 0.040, nomQ: 16.0, maxQ: 20.0, q2: 0.16, q3: 16.0 },
+            { name: '2" (50mm) Woltmann Class B/C', D: 0.050, nomQ: 15.0, maxQ: 30.0, q2: 3.0, q3: 15.0 },
+            { name: '2" (50mm) Electro/Ultra ISO R400/500', D: 0.050, nomQ: 40.0, maxQ: 50.0, q2: 0.16, q3: 40.0 },
+            { name: '3" (80mm) Woltmann Class B/C', D: 0.080, nomQ: 40.0, maxQ: 80.0, q2: 8.0, q3: 40.0 },
+            { name: '3" (80mm) Ultrasonic ISO R500', D: 0.080, nomQ: 63.0, maxQ: 78.75, q2: 0.20, q3: 63.0 },
+            { name: '3" (80mm) Electromagnetic ISO R400', D: 0.080, nomQ: 100.0, maxQ: 125.0, q2: 0.40, q3: 100.0 },
+            { name: '4" (100mm) Woltmann Class B/C', D: 0.100, nomQ: 60.0, maxQ: 120.0, q2: 12.0, q3: 60.0 },
+            { name: '4" (100mm) Ultrasonic ISO R500', D: 0.100, nomQ: 100.0, maxQ: 125.0, q2: 0.32, q3: 100.0 },
+            { name: '4" (100mm) Electromagnetic ISO R400', D: 0.100, nomQ: 160.0, maxQ: 200.0, q2: 0.64, q3: 160.0 },
+            { name: '6" (150mm) Woltmann Class B/C', D: 0.150, nomQ: 150.0, maxQ: 300.0, q2: 30.0, q3: 150.0 },
+            { name: '6" (150mm) Ultrasonic ISO R500', D: 0.150, nomQ: 250.0, maxQ: 312.5, q2: 0.80, q3: 250.0 },
+            { name: '6" (150mm) Electromagnetic ISO R400', D: 0.150, nomQ: 400.0, maxQ: 500.0, q2: 1.6, q3: 400.0 },
+            { name: '8" (200mm) Woltmann Class B', D: 0.200, nomQ: 250.0, maxQ: 500.0, q2: 50.0, q3: 250.0 },
+            { name: '8" (200mm) Ultrasonic ISO R500', D: 0.200, nomQ: 400.0, maxQ: 500.0, q2: 1.28, q3: 400.0 },
+            { name: '8" (200mm) Electromagnetic ISO R400', D: 0.200, nomQ: 630.0, maxQ: 787.5, q2: 2.52, q3: 630.0 },
+            { name: '12" (300mm) Woltmann Class B', D: 0.300, nomQ: 600.0, maxQ: 1200.0, q2: 120.0, q3: 600.0 },
+            { name: '12" (300mm) Electro/Ultra ISO R400/500', D: 0.300, nomQ: 1000.0, maxQ: 1250.0, q2: 3.2, q3: 1000.0 },
+            { name: '16" (400mm) Woltmann Class B', D: 0.400, nomQ: 1000.0, maxQ: 2000.0, q2: 200.0, q3: 1000.0 }
         ];
 
         const pipesData = [
@@ -919,7 +1027,7 @@
             hm2 = getMinorLoss(Q_est, D2, K2);
             h_float = getMinorLoss(Q_est, D_float, K_float);
 
-            return { Q1: 0, Q2: Q_m3h, Qtot: Q_m3h, Qtot_theo: Q_theo, v1, v2, hf1, hm1, hf2, hm2, h_float1: 0, h_float2: h_float, bottleneck, overload };
+            return { Q_m3h, Q_theo, v1, v2, hf1, hm1, hf2, hm2, h_float, v2g: v2g_exit, bottleneck, overload };
         }
 
         function updateBottleneckBox(modeId, isBottleneck, qTheo, meterMax) {
@@ -993,6 +1101,7 @@
                     <li><b>ความสูง/ระยะท่อ:</b> ${dz} m / ${L} m</li>
                     <li><b>ข้อต่อ/วาล์ว ΣK:</b> ${sumK.toFixed(2)}</li>
                     <li><b>ปลายท่อ:</b> ${endValveSizeObj.name} ${endValveTypeName}</li>
+                    <li class="col-span-2"><b>ช่วงใช้งานมาตร (Q₂-Q₃):</b> ${meter.q2} - ${meter.q3} m³/h (Q₄: ${meter.maxQ})</li>
                 </ul>
             `);
 
@@ -1001,7 +1110,7 @@
 
             document.getElementById('m1_resFlowM3H').textContent = targetQ_m3h.toFixed(2);
             document.getElementById('m1_resPipeSize').textContent = pipe.name;
-            document.getElementById('m1_resMeterSize').innerHTML = `${meter.name}<br><span class="text-[10px] text-slate-400 font-normal">(พิกัด Qn=${meter.nomQ}, Qmax=${meter.maxQ})</span>`;
+            document.getElementById('m1_resMeterSize').innerHTML = `${meter.name}<br><span class="text-[10px] text-slate-500 font-normal">ช่วงแนะนำ (Q₂-Q₃): ${meter.q2} - ${meter.q3} m³/h</span><br><span class="text-[9px] text-slate-400 font-normal">สูงสุด (Q₄): ${meter.maxQ} m³/h</span>`;
             document.getElementById('m1_resP2Bar').textContent = P2_bar_req.toFixed(2);
             document.getElementById('m1_resP2Bar').className = P2_head_req >= 0 ? "text-blue-600" : "text-red-600";
 
@@ -1044,7 +1153,7 @@
             } else if (sim.Q_m3h >= targetQ_m3h) {
                 status.className = 'p-3 rounded-lg text-sm mt-auto border bg-emerald-50 border-emerald-200 text-emerald-800';
                 let msg = `<i class="fa-solid fa-check-circle mr-1 text-emerald-600"></i><b>ระบบทำงานได้ดีเยียม:</b> อัตราไหลจริง (${sim.Q_m3h.toFixed(2)}) <b>สูงกว่า</b> ความต้องการ (${targetQ_m3h.toFixed(2)})`;
-                if(sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 font-bold text-[11px]"><i class="fa-solid fa-triangle-exclamation mr-1"></i>⚠️ อัตราไหลสูงกว่าค่าปกติต่อเนื่อง (Qn=${meter.nomQ}) ของมาตรวัดน้ำ อาจทำให้มาตรสึกหรอเร็วขึ้นในระยะยาว</div>`;
+                if(sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 font-bold text-[11px]"><i class="fa-solid fa-triangle-exclamation mr-1"></i>⚠️ อัตราไหลสูงกว่าค่าปกติต่อเนื่อง (Q₃=${meter.q3}) ของมาตรวัดน้ำ อาจทำให้มาตรสึกหรอเร็วขึ้นในระยะยาว</div>`;
                 status.innerHTML = msg;
             } else {
                 status.className = 'p-3 rounded-lg text-sm mt-auto border bg-orange-50 border-orange-200 text-orange-800';
@@ -1080,7 +1189,7 @@
                     <li><b>แรงดัน P1:</b> ${P1_bar} Bar</li>
                     <li><b>ความสูง Δz:</b> ${dz} m</li>
                     <li><b>ท่อเมน/ระยะ:</b> ${pipe.name} / ${L} m</li>
-                    <li><b>มาตรวัดน้ำ:</b> ${meter.name}</li>
+                    <li><b>มาตรวัดน้ำ:</b> ${meter.name} (Q₂-Q₃: ${meter.q2}-${meter.q3})</li>
                     <li><b>ข้อต่อ/วาล์ว ΣK:</b> ${sumK.toFixed(2)}</li>
                     <li><b>ปลายท่อ:</b> ${endValveSizeObj.name} ${endValveTypeName}</li>
                 </ul>
@@ -1092,7 +1201,7 @@
             document.getElementById('m2_resFlowM3H').innerHTML = `${sim.Q_m3h.toFixed(2)} <span class="text-lg font-bold">m³/h</span>`;
             document.getElementById('m2_resFlowLPM').textContent = `${(sim.Q_m3h*1000/60).toFixed(1)} L/min`;
             document.getElementById('m2_resPipeSize').textContent = pipe.name;
-            document.getElementById('m2_resMeterSize').innerHTML = `${meter.name}`;
+            document.getElementById('m2_resMeterSize').innerHTML = `${meter.name}<br><span class="text-[10px] text-slate-500 font-normal block mt-1">ช่วง (Q₂-Q₃): ${meter.q2} - ${meter.q3} m³/h</span>`;
             document.getElementById('m2_resFloatSize').textContent = endValveSizeObj.name + " (" + endValveTypeName + ")";
 
             updateBottleneckBox('m2', sim.bottleneck, sim.Q_theo, meter.maxQ);
@@ -1129,7 +1238,7 @@
                 status.innerHTML = `<i class="fa-solid fa-ban mr-1 text-red-600"></i>น้ำไม่ไหล: แรงดันไม่ชนะความสูง`;
             } else {
                 let msg = `<i class="fa-solid fa-check-circle mr-1 text-emerald-600"></i><b>วิเคราะห์สำเร็จ</b>`;
-                if (sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 font-bold text-xs">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Qn=${meter.nomQ}) ควรพิจารณาขยายมาตรวัดน้ำเพื่อรักษาความแม่นยำ</div>`;
+                if (sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 font-bold text-xs">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Q₃=${meter.q3}) ควรพิจารณาขยายมาตรวัดน้ำเพื่อรักษาความแม่นยำ</div>`;
                 if (endValveSizeObj.D < pipe.D) msg += `<div class="mt-1 text-slate-600 text-xs">คอขวดที่ปลายทางเกิด Head Loss = ${sim.h_float.toFixed(2)} m</div>`;
                 
                 status.className = 'p-3 rounded-lg text-sm mt-auto border bg-emerald-50 border-emerald-200 text-emerald-800';
@@ -1253,7 +1362,7 @@
 
             populatePrintSummary('mode3', `
                 <ul class="grid grid-cols-2 gap-2">
-                    <li><b>มาตรวัดน้ำ:</b> ${meter.name}</li>
+                    <li><b>มาตรวัดน้ำ:</b> ${meter.name} (Q₂-Q₃: ${meter.q2}-${meter.q3})</li>
                     <li><b>รูปแบบจำลอง:</b> ${is24h ? '24 ชั่วโมง' : 'จุดเวลาเดียว'}</li>
                     <li><b>สถานะวาล์ว:</b> <span class="text-indigo-600 font-bold">${scenarioText}</span></li>
                     <li><b>ช่วง 1 (ไปถัง 1):</b> ท่อ ${pipe1.name}, L=${Leff1}m, Z=${Z1}m, ΣK=${K1.toFixed(2)}</li>
@@ -1271,7 +1380,7 @@
                 document.getElementById('m3_output_single').classList.remove('hidden');
                 document.getElementById('m3_output_24h').classList.add('hidden');
 
-                document.getElementById('m3_resMeter').innerHTML = `${meter.name}`;
+                document.getElementById('m3_resMeter').innerHTML = `${meter.name}<br><span class="text-[9px] text-slate-500 font-normal block mt-1">Q₂-Q₃: ${meter.q2}-${meter.q3} m³/h</span>`;
                 document.getElementById('m3_resPipe1').textContent = pipe1.name;
                 document.getElementById('m3_resPipe2').textContent = pipe2.name;
                 document.getElementById('lbl_l1').textContent = Leff1.toFixed(1);
@@ -1330,9 +1439,9 @@
                     </p>
                     ${eqHtml}
                     <p><b>สรุปคำตอบที่ได้ตามทฤษฎี (Theoretical Free Flow):</b><br>
-                       - น้ำไหลลงถังที่ 1 (\\( Q_1 \\)) = ${sim.Q1.toFixed(3)} \\text{ m}^3/\\text{h}<br>
-                       - น้ำไหลลงถังที่ 2 (\\( Q_2 \\)) = ${sim.Q2.toFixed(3)} \\text{ m}^3/\\text{h}<br>
-                       - อัตราการไหลรวม (\\( Q_{tot} \\)) = ${sim.Qtot_theo.toFixed(3)} \\text{ m}^3/\\text{h}
+                       - น้ำไหลลงถังที่ 1 (\\( Q_1 \\)) = ${sim.Q1.toFixed(3)} m³/h<br>
+                       - น้ำไหลลงถังที่ 2 (\\( Q_2 \\)) = ${sim.Q2.toFixed(3)} m³/h<br>
+                       - อัตราการไหลรวม (\\( Q_{tot} \\)) = ${sim.Qtot_theo.toFixed(3)} m³/h
                     </p>
                     ${sim.bottleneck ? `<p class="text-red-700"><b>* ข้อจำกัดของมาตรวัดน้ำ:</b><br>เนื่องจากมาตร ${meter.name} รับได้สูงสุดที่ ${meter.maxQ} m³/h ปริมาณน้ำจึงถูกบีบลดทอนลงตามสัดส่วน (Proportional Throttle)</p>` : ``}
                 </div>`;
@@ -1365,7 +1474,7 @@
                         msg += `<div class="mt-1 text-sky-600 font-bold text-xs"><i class="fa-solid fa-info-circle mr-1"></i>จำลองสถานะ: เติมเฉพาะถัง 2</div>`;
                     }
 
-                    if(sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 text-xs font-bold">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Qn=${meter.nomQ}) ของมาตรวัดน้ำ</div>`;
+                    if(sim.overload && !sim.bottleneck) msg += `<div class="mt-2 text-orange-600 text-xs font-bold">⚠️ อัตราไหลสูงเกินพิกัดปกติต่อเนื่อง (Q₃=${meter.q3}) ของมาตรวัดน้ำ</div>`;
                     
                     if((Leff1 > 0 ? (sim.hf1 / Leff1)*100 : 0) > 10 || (L2 > 0 ? (sim.hf2 / L2)*100 : 0) > 10) {
                         msg += `<div class="mt-1 text-red-600 text-xs"><i class="fa-solid fa-bolt mr-1"></i> Unit Hf > 10 m/100m ท่อเล็กเกินไป ท่อจะสั่นและเสียงดัง</div>`;
